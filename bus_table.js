@@ -1,4 +1,6 @@
 window.onload = function() {
+    //start
+    //alert("F5 over");
 
     //show date
     var today = new Date();
@@ -209,7 +211,7 @@ window.onload = function() {
 	    return -1;
 	}
 	if (oldCell.end_time > thisCell_next.start_time) {
-	    //alsert("4");
+	    //alert("4");
 	    return -1;
 	}
 	//alert("0");  
@@ -219,11 +221,11 @@ window.onload = function() {
 	var oldCell;
 	var thisCell_pre,thisCell_next;
 
-	//alert("row:"+row+" col:"+col);
+//alert("row:"+row+" col:"+col);
 
 	var new_col = col/2; //the left of the gap
 	var new_cell_of_temp = (cell_of_temp+1)/2;
-
+	
 	oldCell = myList.row[row_of_temp].trip[new_cell_of_temp-1];
 	//alert("ei");
 	if(new_col==myList.row[row].trip.length){
@@ -233,9 +235,9 @@ window.onload = function() {
 	    thisCell_pre = myList.row[row].trip[new_col-1];
 	    thisCell_next = myList.row[row].trip[new_col];
 	}
-	alert("old:"+oldCell.line_name);
-	alert("pre:"+thisCell_pre.line_name);
-	alert("nex:"+thisCell_next.line_name);
+//alert("old:"+oldCell.line_name);
+//alert("pre:"+thisCell_pre.line_name);
+//alert("nex:"+thisCell_next.line_name);
 
 
 	if(oldCell.start_time < thisCell_pre.end_time){
@@ -276,18 +278,18 @@ window.onload = function() {
 	//change innerHtml
 	//changeText(row_of_temp); //oldCell
 	//changeText(row); //thisCell
-
+	
 	//table.parentNode.removeChild(table);
 	//table = document.getElementById("table1");
 	//for(var q=0;q<table.row.length;q++)
-	//table.deleteRow(0);
+	    //table.deleteRow(0);
 
 	for(var q=table.rows.length-1;q>=0;q--)
 	    table.deleteRow(q);
 	//alert("deleted!");
 	display_table();
 
-	//alert("Exchange Finished!");
+	alert("Exchange Finished!");
 
 
     }
@@ -385,7 +387,8 @@ window.onload = function() {
 			    isPrepared = true;
 			} else {
 			    this.style.backgroundColor = "#39B54A";
-			    if (j%2 == 0 && j!=0) //insert
+			    //alert(this.cellIndex);
+			    if (this.cellIndex %2 == 0 && this.cellIndex!=0) //insert
 			    {
 				if (examine_ins(this.parentNode.rowIndex, this.cellIndex) == 0)
 				{
@@ -397,15 +400,16 @@ window.onload = function() {
 				    alert("insert failed");
 				}
 			    }
-			    else if (j%2 != 0 && j!=table.rows[i].cells.length) //exchange
+			    else if (this.cellIndex<table.rows[this.parentNode.rowIndex].cells.length-1) //exchange
 			    {
+				//alert("sleep");
 				if (examine(this.parentNode.rowIndex, this.cellIndex) == 0) {
-				    //alert("hel");
-				    exchange( /*this, */ this.parentNode.rowIndex, this.cellIndex);
-				    //alert("YO");
-				} else {
-				    alert("exchange failed");
-				}
+					//alert("hel");
+					exchange( /*this, */ this.parentNode.rowIndex, this.cellIndex);
+					//alert("YO");
+				    } else {
+					alert("exchange failed");
+			    	}
 			    }
 
 			    //exchange(/*this, */this.parentNode.rowIndex, this.cellIndex);
