@@ -134,7 +134,7 @@ window.onload = function() {
 
     display_table();
 
-    alert("Y");
+    //alert("Y");
 
     //definition of functions
     function store(Cell) {
@@ -151,7 +151,7 @@ window.onload = function() {
 	var new_col = (col+1)/2;
 	var new_cell_of_temp = (cell_of_temp+1)/2;
 
-	alert("PP");
+	//alert("PP");
 
 	if(new_cell_of_temp-1==0){
 	    oldCell = myList.row[row_of_temp].trip[new_cell_of_temp-1];
@@ -194,38 +194,38 @@ window.onload = function() {
 	//examine oldCell origin position time
 	//oldCell_pre.end_time -> thisCell -> OldCell_next.start_time
 	if (thisCell.start_time < oldCell_pre.end_time) {
-	    alert("1");
+	    //alert("1");
 	    return -1;
 	}
 	if (thisCell.end_time > oldCell_next.start_time) {
-	    alert("2");
+	    //alert("2");
 	    return -1;
 	}
 
 	//examine thisCell origin position time
 	//thisCell_pre.end_time -> oldCell -> thisCell_next.start_time
 	if (oldCell.start_time < thisCell_pre.end_time) {
-	    alert("3");
+	    //alert("3");
 	    return -1;
 	}
 	if (oldCell.end_time > thisCell_next.start_time) {
-	    alsert("4");
+	    //alsert("4");
 	    return -1;
 	}
-	alert("0");  
+	//alert("0");  
 	return 0
     }
     function examine_ins(row,col){
 	var oldCell;
 	var thisCell_pre,thisCell_next;
 
-alert("row:"+row+" col:"+col);
+	//alert("row:"+row+" col:"+col);
 
 	var new_col = col/2; //the left of the gap
 	var new_cell_of_temp = (cell_of_temp+1)/2;
-	
+
 	oldCell = myList.row[row_of_temp].trip[new_cell_of_temp-1];
-	alert("ei");
+	//alert("ei");
 	if(new_col==myList.row[row].trip.length){
 	    thisCell_pre = myList.row[row].trip[new_col-1];
 	    thisCell_next = {"start_time": 9999};
@@ -233,20 +233,20 @@ alert("row:"+row+" col:"+col);
 	    thisCell_pre = myList.row[row].trip[new_col-1];
 	    thisCell_next = myList.row[row].trip[new_col];
 	}
-alert("old:"+oldCell.line_name);
-alert("pre:"+thisCell_pre.line_name);
-alert("nex:"+thisCell_next.line_name);
+	alert("old:"+oldCell.line_name);
+	alert("pre:"+thisCell_pre.line_name);
+	alert("nex:"+thisCell_next.line_name);
 
 
 	if(oldCell.start_time < thisCell_pre.end_time){
-	    alert("3");
+	    //alert("3");
 	    return -1;
 	}
 	if(oldCell.end_time > thisCell_next.start_time){
-	    alert("4");
+	    //alert("4");
 	    return -1;
 	}
-	alert("0");
+	//alert("0");
 	return 0;
     }
 
@@ -258,16 +258,16 @@ alert("nex:"+thisCell_next.line_name);
 
 	//old->TEMP
 	temp = oldCell;
-	alert("old :" + oldCell.line_name);
-	alert("this:" + thisCell.line_name);
+	//alert("old :" + oldCell.line_name);
+	//alert("this:" + thisCell.line_name);
 
 	//this->old
 	oldCell = thisCell;
 
 	//TEMP->this
 	thisCell = temp;
-	alert("old :" + oldCell.line_name);
-	alert("this:" + thisCell.line_name);
+	//alert("old :" + oldCell.line_name);
+	//alert("this:" + thisCell.line_name);
 
 	//reverse input
 	myList.row[row_of_temp].trip[(cell_of_temp+1)/2-1] = oldCell; //json index
@@ -276,28 +276,28 @@ alert("nex:"+thisCell_next.line_name);
 	//change innerHtml
 	//changeText(row_of_temp); //oldCell
 	//changeText(row); //thisCell
-	
+
 	//table.parentNode.removeChild(table);
 	//table = document.getElementById("table1");
 	//for(var q=0;q<table.row.length;q++)
-	    //table.deleteRow(0);
+	//table.deleteRow(0);
 
 	for(var q=table.rows.length-1;q>=0;q--)
 	    table.deleteRow(q);
-	alert("deleted!");
+	//alert("deleted!");
 	display_table();
 
-	alert("Exchange Finished!");
+	//alert("Exchange Finished!");
 
 
     }
 
     function insert(row,col) {
 	var oldCell = myList.row[row_of_temp].trip[(cell_of_temp+1)/2-1];
-	alert("add");
+	//alert("add");
 	//add obj brfore 'col/2'
 	myList.row[row].trip.splice((col/2),0,oldCell);
-	alert("del");
+	//alert("del");
 	//delete obj
 	myList.row[row_of_temp].trip.splice( ((cell_of_temp+1)/2-1),1);
 
@@ -331,7 +331,7 @@ alert("nex:"+thisCell_next.line_name);
 
     function display_table() {
 	table = document.getElementById("table1");
-	alert("BLABLA");
+	//alert("BLABLA");
 	totwork = new Array(myList.row.length);
 	allwork = 0;
 	maxnum_cells = 0;
@@ -389,7 +389,7 @@ alert("nex:"+thisCell_next.line_name);
 			    {
 				if (examine_ins(this.parentNode.rowIndex, this.cellIndex) == 0)
 				{
-				    alert("insert");
+				    //alert("insert");
 				    insert(this.parentNode.rowIndex, this.cellIndex);
 
 				}
@@ -400,12 +400,12 @@ alert("nex:"+thisCell_next.line_name);
 			    else if (j%2 != 0 && j!=table.rows[i].cells.length) //exchange
 			    {
 				if (examine(this.parentNode.rowIndex, this.cellIndex) == 0) {
-					alert("hel");
-					exchange( /*this, */ this.parentNode.rowIndex, this.cellIndex);
-					alert("YO");
-				    } else {
-					alert("exchange failed");
-			    	}
+				    //alert("hel");
+				    exchange( /*this, */ this.parentNode.rowIndex, this.cellIndex);
+				    //alert("YO");
+				} else {
+				    alert("exchange failed");
+				}
 			    }
 
 			    //exchange(/*this, */this.parentNode.rowIndex, this.cellIndex);
