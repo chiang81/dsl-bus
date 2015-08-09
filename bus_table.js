@@ -1,4 +1,4 @@
-window.onload = function() {
+﻿window.onload = function() {
     //start
     //alert("F5 over");
 
@@ -126,24 +126,21 @@ window.onload = function() {
 
     var table = document.getElementById("table1");
     var totwork = new Array(myList.row.length);
+    var realwork = new Array(myList.row.length);
     var allwork = 0;
+    var all_realwork = 0;
     var maxnum_cells = 0;
-    //var table = document.getElementById("table1");
     var isPrepared = false;
     var row_of_temp, cell_of_temp;
     var content;
 
-
     display_table();
-
-    //alert("Y");
 
     //definition of functions
     function store(Cell) {
 	//A->TEMP
 	row_of_temp = Cell.parentNode.rowIndex;
 	cell_of_temp = Cell.cellIndex; //table index
-	//content      = Cell.innerHTML;
     }
 
     function examine(row, col) {
@@ -152,8 +149,6 @@ window.onload = function() {
 
 	var new_col = (col+1)/2;
 	var new_cell_of_temp = (cell_of_temp+1)/2;
-
-	//alert("PP");
 
 	if(new_cell_of_temp-1==0){
 	    oldCell = myList.row[row_of_temp].trip[new_cell_of_temp-1];
@@ -182,52 +177,33 @@ window.onload = function() {
 	    thisCell_pre = myList.row[row].trip[new_col-2];
 	    thisCell_next = myList.row[row].trip[new_col];
 	}
-	//var oldCell = myList.row[row_of_temp].trip[cell_of_temp - 1];
-	//alert("OldCell start_time="+oldCell.start_time);
-	//var oldCell_pre = myList.row[row_of_temp].trip[cell_of_temp - 2];
-	//alert("OldCell_pre start_time="+oldCell_pre.start_time);
-	//var oldCell_next = myList.row[row_of_temp].trip[cell_of_temp];
-	//alert("OldCell_next start_time="+oldCell_next.start_time);
-
-	//var thisCell = myList.row[row].trip[col - 1];
-	//var thisCell_pre = myList.row[row].trip[col - 2];
-	//var thisCell_next = myList.row[row].trip[col];
 
 	//examine oldCell origin position time
-	//oldCell_pre.end_time -> thisCell -> OldCell_next.start_time
 	if (thisCell.start_time < oldCell_pre.end_time) {
-	    //alert("1");
 	    return -1;
 	}
 	if (thisCell.end_time > oldCell_next.start_time) {
-	    //alert("2");
 	    return -1;
 	}
 
 	//examine thisCell origin position time
-	//thisCell_pre.end_time -> oldCell -> thisCell_next.start_time
 	if (oldCell.start_time < thisCell_pre.end_time) {
-	    //alert("3");
 	    return -1;
 	}
 	if (oldCell.end_time > thisCell_next.start_time) {
-	    //alert("4");
 	    return -1;
 	}
-	//alert("0");  
 	return 0
     }
+
     function examine_ins(row,col){
 	var oldCell;
 	var thisCell_pre,thisCell_next;
-
-//alert("row:"+row+" col:"+col);
 
 	var new_col = col/2; //the left of the gap
 	var new_cell_of_temp = (cell_of_temp+1)/2;
 	
 	oldCell = myList.row[row_of_temp].trip[new_cell_of_temp-1];
-	//alert("ei");
 	if(new_col==myList.row[row].trip.length){
 	    thisCell_pre = myList.row[row].trip[new_col-1];
 	    thisCell_next = {"start_time": 9999};
@@ -235,20 +211,13 @@ window.onload = function() {
 	    thisCell_pre = myList.row[row].trip[new_col-1];
 	    thisCell_next = myList.row[row].trip[new_col];
 	}
-//alert("old:"+oldCell.line_name);
-//alert("pre:"+thisCell_pre.line_name);
-//alert("nex:"+thisCell_next.line_name);
-
 
 	if(oldCell.start_time < thisCell_pre.end_time){
-	    //alert("3");
 	    return -1;
 	}
 	if(oldCell.end_time > thisCell_next.start_time){
-	    //alert("4");
 	    return -1;
 	}
-	//alert("0");
 	return 0;
     }
 
@@ -260,33 +229,19 @@ window.onload = function() {
 
 	//old->TEMP
 	temp = oldCell;
-	//alert("old :" + oldCell.line_name);
-	//alert("this:" + thisCell.line_name);
 
 	//this->old
 	oldCell = thisCell;
 
 	//TEMP->this
 	thisCell = temp;
-	//alert("old :" + oldCell.line_name);
-	//alert("this:" + thisCell.line_name);
 
 	//reverse input
 	myList.row[row_of_temp].trip[(cell_of_temp+1)/2-1] = oldCell; //json index
 	myList.row[row].trip[(col+1)/2-1] = thisCell;
 
-	//change innerHtml
-	//changeText(row_of_temp); //oldCell
-	//changeText(row); //thisCell
-	
-	//table.parentNode.removeChild(table);
-	//table = document.getElementById("table1");
-	//for(var q=0;q<table.row.length;q++)
-	    //table.deleteRow(0);
-
 	for(var q=table.rows.length-1;q>=0;q--)
 	    table.deleteRow(q);
-	//alert("deleted!");
 	display_table();
 
 	alert("Exchange Finished!");
@@ -296,10 +251,8 @@ window.onload = function() {
 
     function insert(row,col) {
 	var oldCell = myList.row[row_of_temp].trip[(cell_of_temp+1)/2-1];
-	//alert("add");
 	//add obj brfore 'col/2'
 	myList.row[row].trip.splice((col/2),0,oldCell);
-	//alert("del");
 	//delete obj
 	myList.row[row_of_temp].trip.splice( ((cell_of_temp+1)/2-1),1);
 
@@ -310,51 +263,38 @@ window.onload = function() {
 	alert("Insert Finished!");
     }
 
-    function changeText(row) {
-	for (j = 1, totwork[row] = 0; j < myList.row[row].trip.length + 1; j++) {
-	    var Trip = myList.row[row].trip[j - 1];
-	    table.rows[row].cells[j].innerText = "";
-	    table.rows[row].cells[j].innerText = Trip.line_name + " \n(" + Trip.start_time + "-" + Trip.end_time + ")";
-	    totwork[row] += (Math.floor(Trip.end_time / 100) - Math.floor(Trip.start_time / 100)) * 60 + (Trip.end_time % 100 - Trip.start_time % 100);
-	}
-	if (maxnum_cells < myList.row[row].trip.length + 1)
-	    maxnum_cells = myList.row[row].trip.length + 1;
-
-	//total worktime per driver
-	for (var i = 0, allwork = 0; i < myList.row.length; i++) {
-	    table.rows[i].cells[maxnum_cells + 1].innerText = totwork[i] + "¤À";
-	    allwork += totwork[i];
-	}
-
-	//num of drivers & avg worktime
-	document.getElementById("driver").innerHTML = myList.row.length + "¤H";
-	document.getElementById("avgwork").innerHTML = Math.round(allwork / myList.row.length) + "¤À";
-    }
-
     function display_table() {
 	table = document.getElementById("table1");
-	//alert("BLABLA");
 	totwork = new Array(myList.row.length);
+	realwork = new Array(myList.row.length);
 	allwork = 0;
+	all_realwork = 0;
 	maxnum_cells = 0;
 	isPrepared = false;
+
 	//JSON table build
 	for (var i = 0, j, k; i < myList.row.length; i++) {
 	    table.insertRow();
+
 	    //Serial Number
 	    table.rows[i].insertCell(0);
 	    table.rows[i].cells[0].innerText = i + 1;
 
-	    for (j = 1,  k = 1, totwork[i] = 0; j < myList.row[i].trip.length + 1; j++, k+=2) {
+	    var start_work = myList.row[i].trip[0].start_time;
+	    var end_work   = myList.row[i].trip[myList.row[i].trip.length-1].end_time;
+
+	    totwork[i] = (Math.floor(end_work / 100) - Math.floor(start_work / 100)) * 60 + (end_work % 100 - start_work % 100);
+
+	    for (j = 1,  k = 1, realwork[i] = 0; j < myList.row[i].trip.length + 1; j++, k+=2) {
 		var Trip = myList.row[i].trip[j - 1];
 		table.rows[i].insertCell(k);
 		table.rows[i].cells[k].innerText = Trip.line_name + " \n(" + Trip.start_time + "-" + Trip.end_time + ")";
 		table.rows[i].insertCell(k+1);
 		table.rows[i].cells[k+1].style.width = '20px';
-		totwork[i] += (Math.floor(Trip.end_time / 100) - Math.floor(Trip.start_time / 100)) * 60 + (Trip.end_time % 100 - Trip.start_time % 100);
+		realwork[i] += (Math.floor(Trip.end_time / 100) - Math.floor(Trip.start_time / 100)) * 60 + (Trip.end_time % 100 - Trip.start_time % 100);
 	    }
 	    if (maxnum_cells < myList.row[i].trip.length*2 + 1)
-		maxnum_cells = myList.row[i].trip.length*2 + 1;
+		{maxnum_cells = myList.row[i].trip.length*2 + 1;}
 	}
 	//total worktime per driver
 	for (var i = 0, j; i < myList.row.length; i++) {
@@ -364,58 +304,51 @@ window.onload = function() {
 
 	    table.rows[i].cells[j - 1].innerText = totwork[i] + "分";
 	    allwork += totwork[i];
+	    all_realwork += realwork[i];
 	}
-	//table.style.emptyCells = "show";
 
 	//num of drivers & avg worktime
 	document.getElementById("driver").innerHTML = myList.row.length + "人";
 	document.getElementById("avgwork").innerHTML = Math.round(allwork / myList.row.length) + "分";
+	document.getElementById("avgreturn").innerHTML = Math.round((allwork - all_realwork) / myList.row.length) + "分"; //中退=總工作-實際工作
 
-	//click then change
-	//var table = document.getElementById("table1");
-	//var isPrepared = false;
-	//var row_of_temp, cell_of_temp;
-	//var content;
-	//var line,start,end;
 	if (table != null) {
 	    for (var i = 0; i < table.rows.length; i++) {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 		    table.rows[i].cells[j].onclick = function() {
+			if (this.cellIndex!=0 && this.cellIndex != table.rows[this.parentNode.rowIndex].cells.length-1 && ((this.cellIndex+1)/2-1)<myList.row[this.parentNode.rowIndex].trip.length) //外邊界防呆+內邊界防呆
+			{ 
 			if (!isPrepared) {
 			    this.style.backgroundColor = "#FF931E";
 			    store(this);
 			    isPrepared = true;
-			} else {
+			} else if (this.parentNode.rowIndex!=row_of_temp && this.cellIndex!=cell_of_temp){ //重複點擊防呆
 			    this.style.backgroundColor = "#39B54A";
-			    //alert(this.cellIndex);
-			    if (this.cellIndex %2 == 0 && this.cellIndex!=0) //insert
+			    if (this.cellIndex %2 == 0) //insert
 			    {
 				if (examine_ins(this.parentNode.rowIndex, this.cellIndex) == 0)
 				{
-				    //alert("insert");
 				    insert(this.parentNode.rowIndex, this.cellIndex);
-
 				}
 				else{
-				    alert("insert failed");
+					alert("insert failed");
 				}
 			    }
-			    else if (this.cellIndex<table.rows[this.parentNode.rowIndex].cells.length-1) //exchange
+			    else// if (this.cellIndex<) //exchange
 			    {
-				//alert("sleep");
-				if (examine(this.parentNode.rowIndex, this.cellIndex) == 0) {
-					//alert("hel");
-					exchange( /*this, */ this.parentNode.rowIndex, this.cellIndex);
-					//alert("YO");
-				    } else {
+				if (examine(this.parentNode.rowIndex, this.cellIndex) == 0)
+				{
+					exchange(this.parentNode.rowIndex, this.cellIndex);
+				}
+				else{
 					alert("exchange failed");
 			    	}
 			    }
 
-			    //exchange(/*this, */this.parentNode.rowIndex, this.cellIndex);
 			    table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = "#FFFFFF";
 			    table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFFFF";
 			    isPrepared = false;
+			}
 			}
 		    };
 		}
