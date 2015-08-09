@@ -1,6 +1,4 @@
 ﻿window.onload = function() {
-    //start
-    //alert("F5 over");
 
     //show date
     var today = new Date();
