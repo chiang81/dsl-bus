@@ -10,7 +10,6 @@
 	day = "0" + day;
     document.getElementById("timebox").innerHTML = year + month + day;
 
-    //JSON table
     var myList = {
 	"row": [{
 	    "trip": [{
