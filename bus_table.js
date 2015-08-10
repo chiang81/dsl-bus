@@ -1,10 +1,10 @@
 ﻿window.onload = function() {
-    //alert("F5 over");
+    alert("F5 over");
 
     //show date
     var today = new Date();
     var year = today.getFullYear();
-    var month = "" + (today.getMonth() + 1);
+    var month = today.getMonth() + 1;
     if (month < 10)
 	month = "0" + month;
     var day = today.getDate();
@@ -97,7 +97,7 @@
 	}, {
 	    "trip": [{
 		"line_name": "12_6",
-		"start_time": 635,
+		"start_time": 835,
 		"end_time": 905
 	    }, {
 		"line_name": "12_15",
@@ -146,8 +146,8 @@
 	var oldCell, oldCell_pre, oldCell_next;
 	var thisCell, thisCell_pre, thisCell_next;
 
-	var new_col = (col+1)/2;
-	var new_cell_of_temp = (cell_of_temp+1)/2;
+	var new_col = (col)/2;
+	var new_cell_of_temp = (cell_of_temp)/2;
 
 	if(new_cell_of_temp-1==0){
 	    oldCell = myList.row[row_of_temp].trip[new_cell_of_temp-1];
@@ -199,14 +199,26 @@
 	var oldCell;
 	var thisCell_pre,thisCell_next;
 
-	var new_col = col/2; //the left of the gap
-	var new_cell_of_temp = (cell_of_temp+1)/2;
+	var new_col = (col-1)/2; //the right index of the gap
+	var new_cell_of_temp = (cell_of_temp)/2-1; //the index in json
 	
-	oldCell = myList.row[row_of_temp].trip[new_cell_of_temp-1];
-	if(new_col==myList.row[row].trip.length){
+	oldCell = myList.row[row_of_temp].trip[new_cell_of_temp];
+	if(new_col==0){//start of array
+	    thisCell_pre = {"end_time": 0};
+	    if(myList.row[row].trip.length==0)
+	    {
+		thisCell_next = {"start_time": 9999};
+	    }
+	    else
+	    {
+		thisCell_next = myList.row[row].trip[new_col];
+	    }
+	} 
+	else if (new_col==myList.row[row].trip.length) {//end of array
 	    thisCell_pre = myList.row[row].trip[new_col-1];
 	    thisCell_next = {"start_time": 9999};
-	} else {
+	} 
+	else {
 	    thisCell_pre = myList.row[row].trip[new_col-1];
 	    thisCell_next = myList.row[row].trip[new_col];
 	}
@@ -221,9 +233,8 @@
     }
 
     function exchange( /*Cell_tb,*/ row, col) {
-	//var oldCell_tb = table.rows[row_of_temp].cells[cell_of_temp];
-	var oldCell = myList.row[row_of_temp].trip[(cell_of_temp+1)/2-1]; //json index
-	var thisCell = myList.row[row].trip[(col+1)/2-1];
+	var oldCell = myList.row[row_of_temp].trip[cell_of_temp/2-1]; //json index
+	var thisCell = myList.row[row].trip[col/2-1];
 	var temp;
 
 	//old->TEMP
@@ -236,30 +247,45 @@
 	thisCell = temp;
 
 	//reverse input
-	myList.row[row_of_temp].trip[(cell_of_temp+1)/2-1] = oldCell; //json index
-	myList.row[row].trip[(col+1)/2-1] = thisCell;
+	myList.row[row_of_temp].trip[cell_of_temp/2-1] = oldCell; //json index
+	myList.row[row].trip[col/2-1] = thisCell;
 
 	for(var q=table.rows.length-1;q>=0;q--)
 	    table.deleteRow(q);
 	display_table();
 
 	alert("Exchange Finished!");
-
-
     }
 
     function insert(row,col) {
-	var oldCell = myList.row[row_of_temp].trip[(cell_of_temp+1)/2-1];
-	//add obj brfore 'col/2'
-	myList.row[row].trip.splice((col/2),0,oldCell);
-	//delete obj
-	myList.row[row_of_temp].trip.splice( ((cell_of_temp+1)/2-1),1);
+	var oldCell = myList.row[row_of_temp].trip[cell_of_temp/2-1];
+	//add obj before 'col/2'
+	myList.row[row].trip.splice((col-1)/2,0,oldCell);
+	//delete obj (delete 1 obj from cell_of_temp/2-1)
+	myList.row[row_of_temp].trip.splice(cell_of_temp/2-1,1);
 
 	for(var q=table.rows.length-1;q>=0;q--)
 	    table.deleteRow(q);
 	display_table();
 
 	alert("Insert Finished!");
+    }
+
+    function add_row() {
+	    myList.row.splice(myList.row.length,0,{"trip": []});
+
+	    for(var q=table.rows.length-1;q>=0;q--)
+	    	table.deleteRow(q);
+	    display_table();
+    }
+
+    function del_row(row) {
+	    //delete obj (delete 1 obj from row)
+	    myList.row.splice(row,1);
+
+	    for(var q=table.rows.length-1;q>=0;q--)
+	    	table.deleteRow(q);
+	    display_table();
     }
 
     function display_table() {
@@ -274,22 +300,28 @@
 	//JSON table build
 	for (var i = 0, j, k; i < myList.row.length; i++) {
 	    table.insertRow();
-
+	    //alert("length :"+myList.row[i].trip.length);
 	    //Serial Number
 	    table.rows[i].insertCell(0);
 	    table.rows[i].cells[0].innerText = i + 1;
-
-	    var start_work = myList.row[i].trip[0].start_time;
-	    var end_work   = myList.row[i].trip[myList.row[i].trip.length-1].end_time;
-
-	    totwork[i] = (Math.floor(end_work / 100) - Math.floor(start_work / 100)) * 60 + (end_work % 100 - start_work % 100);
-
+	    //set totwork
+	    if(myList.row[i].trip.length > 0)
+	    {
+		    var start_work = myList.row[i].trip[0].start_time;
+		    var end_work   = myList.row[i].trip[myList.row[i].trip.length-1].end_time;
+		    totwork[i] = (Math.floor(end_work / 100) - Math.floor(start_work / 100)) * 60 + (end_work % 100 - start_work % 100);
+	    }
+	    else
+	    {
+		    totwork[i] = 0;
+	    }
+	    //add cell to 'myList.row[i].trip.length'
 	    for (j = 1,  k = 1, realwork[i] = 0; j < myList.row[i].trip.length + 1; j++, k+=2) {
 		var Trip = myList.row[i].trip[j - 1];
 		table.rows[i].insertCell(k);
-		table.rows[i].cells[k].innerText = Trip.line_name + " \n(" + Trip.start_time + "-" + Trip.end_time + ")";
+		table.rows[i].cells[k].style.width = '20px';
 		table.rows[i].insertCell(k+1);
-		table.rows[i].cells[k+1].style.width = '20px';
+		table.rows[i].cells[k+1].innerText = Trip.line_name + " \n(" + Trip.start_time + "-" + Trip.end_time + ")";
 		realwork[i] += (Math.floor(Trip.end_time / 100) - Math.floor(Trip.start_time / 100)) * 60 + (Trip.end_time % 100 - Trip.start_time % 100);
 	    }
 	    if (maxnum_cells < myList.row[i].trip.length*2 + 1)
@@ -297,11 +329,19 @@
 	}
 	//total worktime per driver
 	for (var i = 0, j; i < myList.row.length; i++) {
-	    for (j = myList.row[i].trip.length*2 + 1; j < maxnum_cells + 1; j++) {
+	    //add cell to 'maxnum_cells'
+	    for (j = myList.row[i].trip.length*2 + 1; j < maxnum_cells ; j++) {
 		table.rows[i].insertCell(j);
 	    }
 
-	    table.rows[i].cells[j - 1].innerText = totwork[i] + "分";
+	    //last insert cell
+	    table.rows[i].insertCell(j);
+	    table.rows[i].cells[j].style.width = '20px';
+
+	    //sum cell
+	    j++;
+	    table.rows[i].insertCell(j);
+	    table.rows[i].cells[j].innerText = totwork[i] + "分";
 	    allwork += totwork[i];
 	    all_realwork += realwork[i];
 	}
@@ -312,46 +352,57 @@
 	document.getElementById("avgreturn").innerHTML = Math.round((allwork - all_realwork) / myList.row.length) + "分"; //中退=總工作-實際工作
 
 	if (table != null) {
-	    for (var i = 0; i < table.rows.length; i++) {
-		for (var j = 0; j < table.rows[i].cells.length; j++) {
-		    table.rows[i].cells[j].onclick = function() {
-alert(this.parentNode.rowIndex+","+this.cellIndex);
-			if (this.cellIndex!=0 && this.cellIndex != table.rows[this.parentNode.rowIndex].cells.length-1 && ((this.cellIndex+1)/2-1)<myList.row[this.parentNode.rowIndex].trip.length) //外邊界防呆+內邊界防呆
-			{ 
-			if (!isPrepared) {
-			    this.style.backgroundColor = "#FF931E";
-			    store(this);
-			    isPrepared = true;
-			} else if (!(this.parentNode.rowIndex==row_of_temp && this.cellIndex==cell_of_temp)){ //重複點擊防呆 //0810 防呆修改-座標完全相同不得進入
-			    this.style.backgroundColor = "#39B54A";
-			    if (this.cellIndex %2 == 0) //insert
-			    {
-				if (examine_ins(this.parentNode.rowIndex, this.cellIndex) == 0)
+	    for (var i = 0; i < table.rows.length; i++)
+	    {
+		for (var j = 0; j < table.rows[i].cells.length; j++) 
+		{
+			table.rows[i].cells[j].onclick = function() {
+			
+			if (this.cellIndex!=0 && this.cellIndex != table.rows[this.parentNode.rowIndex].cells.length-1 && ((this.cellIndex-1)/2)<=myList.row[this.parentNode.rowIndex].trip.length) //外邊界防呆+內邊界防呆
+			{
+				/*alert(this.parentNode.rowIndex+","+this.cellIndex);
+				alert("有效點擊");*/
+				if (!isPrepared && this.cellIndex %2 == 0) //第一次點擊時間格防呆 
+				{ 
+					this.style.backgroundColor = "#FF931E";
+					store(this);
+					isPrepared = true;
+				}
+				else if (isPrepared)
 				{
-				    insert(this.parentNode.rowIndex, this.cellIndex);
+					if(this.parentNode.rowIndex!=row_of_temp || this.cellIndex!=cell_of_temp) //重複點擊防呆-座標完全相同不得進入
+					{
+			    			this.style.backgroundColor = "#39B54A";
+			    			if (this.cellIndex %2 != 0) //insert
+			    			{	if (examine_ins(this.parentNode.rowIndex, this.cellIndex) == 0)
+							{insert(this.parentNode.rowIndex, this.cellIndex);}
+							else{alert("insert failed");}	}
+					    	else// if (this.cellIndex<) //exchange
+					    	{	if (examine(this.parentNode.rowIndex, this.cellIndex) == 0)
+							{exchange(this.parentNode.rowIndex, this.cellIndex);}
+							else
+							{alert("exchange failed");}	}
+					}
+					table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = "#FFFFFF";
+					table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFFFF";
+					isPrepared = false;
 				}
-				else{
-					alert("insert failed");
-				}
-			    }
-			    else// if (this.cellIndex<) //exchange
-			    {
-				if (examine(this.parentNode.rowIndex, this.cellIndex) == 0)
-				{
-					exchange(this.parentNode.rowIndex, this.cellIndex);
-				}
-				else{
-					alert("exchange failed");
-			    	}
-			    }
-
-			    table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = "#FFFFFF";
-			    table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFFFF";
-			    isPrepared = false;
 			}
-			}
-		    };
+			};
 		}
+		table.rows[i].cells[0].ondblclick = function() {
+			table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFF00";
+			alert("dbclick test!");
+			table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFFFF";
+			if(this.parentNode.rowIndex==myList.row.length-1) //double click last row
+			{
+				add_row();
+			}
+			else if(myList.row[this.parentNode.rowIndex].trip.length ==0) //delete null row
+			{
+				del_row(this.parentNode.rowIndex);
+			}
+		};
 	    }
 	}
     }
