@@ -179,19 +179,7 @@ window.onload = function() {
 	    thisCell_pre = myList.row[row].trip[new_col-2];
 	    thisCell_next = myList.row[row].trip[new_col];
 	}
-	//var oldCell = myList.row[row_of_temp].trip[cell_of_temp - 1];
-	//alert("OldCell start_time="+oldCell.start_time);
-	//var oldCell_pre = myList.row[row_of_temp].trip[cell_of_temp - 2];
-	//alert("OldCell_pre start_time="+oldCell_pre.start_time);
-	//var oldCell_next = myList.row[row_of_temp].trip[cell_of_temp];
-	//alert("OldCell_next start_time="+oldCell_next.start_time);
-
-	//var thisCell = myList.row[row].trip[col - 1];
-	//var thisCell_pre = myList.row[row].trip[col - 2];
-	//var thisCell_next = myList.row[row].trip[col];
-
-	//examine oldCell origin position time
-	//oldCell_pre.end_time -> thisCell -> OldCell_next.start_time
+	
 	if (thisCell.start_time < oldCell_pre.end_time) {
 	    alert("1");
 	    return -1;
