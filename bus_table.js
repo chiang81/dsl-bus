@@ -1,5 +1,7 @@
 ﻿window.onload = function() {
+    //alert("F5 over");
 
+    //show date
     var today = new Date();
     var year = today.getFullYear();
     var month = "" + (today.getMonth() + 1);
@@ -10,6 +12,7 @@
 	day = "0" + day;
     document.getElementById("timebox").innerHTML = year + month + day;
 
+    //JSON table
     var myList = {
 	"row": [{
 	    "trip": [{
@@ -312,13 +315,14 @@
 	    for (var i = 0; i < table.rows.length; i++) {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 		    table.rows[i].cells[j].onclick = function() {
+alert(this.parentNode.rowIndex+","+this.cellIndex);
 			if (this.cellIndex!=0 && this.cellIndex != table.rows[this.parentNode.rowIndex].cells.length-1 && ((this.cellIndex+1)/2-1)<myList.row[this.parentNode.rowIndex].trip.length) //外邊界防呆+內邊界防呆
 			{ 
 			if (!isPrepared) {
 			    this.style.backgroundColor = "#FF931E";
 			    store(this);
 			    isPrepared = true;
-			} else if (this.parentNode.rowIndex!=row_of_temp && this.cellIndex!=cell_of_temp){ //重複點擊防呆
+			} else if (!(this.parentNode.rowIndex==row_of_temp && this.cellIndex==cell_of_temp)){ //重複點擊防呆 //0810 防呆修改-座標完全相同不得進入
 			    this.style.backgroundColor = "#39B54A";
 			    if (this.cellIndex %2 == 0) //insert
 			    {
