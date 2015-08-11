@@ -346,10 +346,19 @@
 	    all_realwork += realwork[i];
 	}
 
+	var num_drivers = 0;
+	for (var i = 0; i < myList.row.length; i++)
+	{
+		if(myList.row[i].trip.length > 0)
+		{
+			num_drivers++;
+		}
+	}
+
 	//num of drivers & avg worktime
-	document.getElementById("driver").innerHTML = myList.row.length + "人";
-	document.getElementById("avgwork").innerHTML = Math.round(allwork / myList.row.length) + "分";
-	document.getElementById("avgreturn").innerHTML = Math.round((allwork - all_realwork) / myList.row.length) + "分"; //中退=總工作-實際工作
+	document.getElementById("driver").innerHTML = num_drivers + "人";
+	document.getElementById("avgwork").innerHTML = Math.round(allwork / num_drivers) + "分";
+	document.getElementById("avgreturn").innerHTML = Math.round((allwork - all_realwork) / num_drivers) + "分"; //中退=總工作-實際工作
 
 	if (table != null) {
 	    for (var i = 0; i < table.rows.length; i++)
@@ -396,7 +405,23 @@
 			table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFFFF";
 			if(this.parentNode.rowIndex==myList.row.length-1) //double click last row
 			{
-				add_row();
+			//	add_row();
+				if(myList.row[this.parentNode.rowIndex].trip.length ==0)
+				{
+					var choice=confirm("要刪除這列嗎？\n <確定>:刪除此列\n <取消>:向下新增一列");
+					if (choice)
+					{
+						del_row(this.parentNode.rowIndex);
+					}
+					else
+					{
+						add_row();
+					}
+				}
+				else
+				{
+					add_row();
+				}
 			}
 			else if(myList.row[this.parentNode.rowIndex].trip.length ==0) //delete null row
 			{
