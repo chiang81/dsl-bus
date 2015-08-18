@@ -346,12 +346,24 @@
 	    all_realwork += realwork[i];
 	}
 
+	//實際司機數
 	var num_drivers = 0;
 	for (var i = 0; i < myList.row.length; i++)
 	{
 		if(myList.row[i].trip.length > 0)
 		{
 			num_drivers++;
+		}
+	}
+	//工作時間檢查
+	for (var i = 0; i < myList.row.length; i++)
+	{
+		if(totwork[i] > 900)
+		{
+			 for (j = 0; j < table.rows[i].cells.length; j++)
+			 {
+				 table.rows[i].cells[j].style.backgroundColor = "#FFFF00";
+			 }
 		}
 	}
 
@@ -400,9 +412,9 @@
 			};
 		}
 		table.rows[i].cells[0].ondblclick = function() {
-			table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFF00";
-			alert("dbclick test!");
-			table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFFFF";
+			//table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFF00";
+			//alert("dbclick test!");
+			//table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FFFFFF";
 			if(this.parentNode.rowIndex==myList.row.length-1) //double click last row
 			{
 			//	add_row();
