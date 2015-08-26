@@ -1,31 +1,46 @@
 ﻿<html>
 <head>
-<title>DEMO</title>
+
+<title>DEMO_dd</title>
 <meta charset="utf-8"/>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript" language="javascript">
 google.load("jquery", "1.3");</script>
-<script type="text/javascript" src="bus_table.js"></script>
+<script type="text/javascript" src="dd.js"></script>
 <style>
+
 body{
 	font-family:Microsoft JhengHei;
 }
 table{
+
 	height: auto;
-	width: 90%;	
+
+	width: 90%;
 }
-#all_infro{
-	width: 100%;
+#all_info{
+	width: 45%;
+	border-style:solid;
+}
+#trip_info{
+	width: 45%;
+	border-style:solid;
+}
+div.float{
+	float: left;
+	margin: 1%; 
 }
 </style>
+
 </head>
 
-<body>
-<div id="all_infro">
-<p1 style="font-size:48pt;font-weight:bold;">港都客運</p1><br>
 
+
+<body>
+<p1 style="font-size:48pt;font-weight:bold;">港都客運</p1><br>
 <p2 style="font-size:36pt;">小港區 - ver. <version id="timebox"></version> </p2><br>
 
+<div id="all_info" class="float">
 <p3 style="font-size:24pt;">
 司機數：<span id="driver"></span><br>
 平均工作時間：<span id="avgwork"></span><br>
@@ -33,8 +48,17 @@ table{
 </p3>
 </div>
 
-<table align="center" id="table1" border="1" width="1140"  cellspacing="0" > 
-</table>
+<div id="trip_info" class="float">
+Trip Name： <span id="data1"></span><br>
+Start Time： <span id="data2"></span><br>
+End Time： <span id="data3"></span><br>
+</div>
 
+<table align="center" id="table1" border="1" width="1140"  cellspacing="0" > </table>
+<br>
+<table align="center" id="tpool" border="1" width="1140"  cellspacing="0" > </table>
+抓取格: <span id="demo1"></span><br>
+經過格: <span id="demo2"></span><br>
+放下格: <span id="demo3"></span><br>
 </body>
 </html>
