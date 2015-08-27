@@ -1,6 +1,7 @@
 ﻿window.onload = function() {
-    alert("F5 over");
+    //alert("F5 over");
 
+    /*
     //show date
     var today = new Date();
     var year = today.getFullYear();
@@ -10,7 +11,8 @@
     var day = today.getDate();
     if (day < 10)
 	day = "0" + day;
-    document.getElementById("timebox").innerHTML = year + month + day
+    document.getElementById("timebox").innerHTML = year + month + day;
+    */
 
     //JSON table
     var myList = {
@@ -309,10 +311,9 @@
 		myList.row[row_of_temp].trip[(cell_of_temp-3)/2] = oldCell; //json index
 	else if(table_mark==1)	//cell from pool
 		poolList.trip[row_of_temp*trips_per_row +cell_of_temp] = oldCell;
-
 	myList.row[row].trip[(col-3)/2] = thisCell;
 
-	alert("Exchange Finished!");
+	//alert("Exchange Finished!");
     }
     function insert(row,col,topool) { //topool=0: insert into table, topool=1: insert into pool
 	//var oldCell = myList.row[row_of_temp].trip[(cell_of_temp-3)/2];
@@ -356,7 +357,7 @@
 			poolList.trip.splice( row_of_temp*trips_per_row +cell_of_temp ,1);
 		}
 	}
-	alert("Insert Finished!");
+	//alert("Insert Finished!");
     }
 
     function add_row() {
@@ -393,6 +394,10 @@
 	all_realwork = 0;
 	maxnum_cells = 0;
 
+	document.getElementById("btn_new").onclick= function(){
+	    add_row();
+	};
+
 	//JSON table build
 	for (var i = 0, j, k; i < myList.row.length; i++) {
 	    table.insertRow();
@@ -403,20 +408,6 @@
 	    
 	    //button cell
 	    table.rows[i].insertCell(1);
-	    if(i==myList.row.length-1)
-	    {
-		    //new button(only in last row)
-		    var btn_new = document.createElement("button");
-		    btn_new.style.width="40px";
-		    btn_new.style.height="30px";
-		    btn_new.innerHTML="新增";
-		    table.rows[i].cells[1].appendChild(btn_new);
-		    table.rows[i].cells[1].appendChild(document.createElement("br"));
-		    btn_new.onclick= function(){
-			    add_row();
-		    };
-		    btn_new.style.width=btn_new.parentNode.width;
-	    }
 	    //del button
 	    var btn_del = document.createElement("button");
 	    btn_del.style.width="40px";
@@ -430,22 +421,22 @@
 			del_row(this.parentNode.parentNode.rowIndex);
 		    else
 		    {
-			    if(myList.row.length > 1)
+			    /*if(myList.row.length > 1)
+			    {*/
+			    //transport trips
+			    while(myList.row[this.parentNode.parentNode.rowIndex].trip.length > 0)
 			    {
-				    //transport trips
-				    while(myList.row[this.parentNode.parentNode.rowIndex].trip.length > 0)
-				    {
-					    var X=myList.row[this.parentNode.parentNode.rowIndex].trip[0];
-					    //delete 1 obj from 0
-					    myList.row[this.parentNode.parentNode.rowIndex].trip.splice(0,1);
-					    //add obj after 'poolList.trip.length'
-					    poolList.trip.splice(poolList.trip.length,0,X);
-				    }
-				    //delete null row
-				    del_row(this.parentNode.parentNode.rowIndex);
+				var X=myList.row[this.parentNode.parentNode.rowIndex].trip[0];
+				//delete 1 obj from 0
+				myList.row[this.parentNode.parentNode.rowIndex].trip.splice(0,1);
+				//add obj after 'poolList.trip.length'
+				poolList.trip.splice(poolList.trip.length,0,X);
 			    }
+			    //delete null row
+			    del_row(this.parentNode.parentNode.rowIndex);
+			    /*}
 			    else
-				    alert("You can't delete anymore. Otherwise, there will be no driver!!");
+				    alert("You can't delete anymore. Otherwise, there will be no driver!!");*/
 			    //refresh pool
 			    for(var q=pool.rows.length-1;q>=0;q--)
 				    pool.deleteRow(q);
@@ -475,7 +466,15 @@
 		
 		table.rows[i].insertCell(k+1);
 		table.rows[i].cells[k+1].align="center";
-		table.rows[i].cells[k+1].innerText = Trip.line_name + " \n(" + Trip.start_time + "-" + Trip.end_time + ")";
+		var timestring_sta, timestring_end;
+		var hr,min;
+		hr=Math.floor(Trip.start_time / 100);
+		min=Trip.start_time % 100;
+		timestring_sta= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min;
+		hr=Math.floor(Trip.end_time / 100);
+		min=Trip.end_time % 100;
+		timestring_end= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min;
+		table.rows[i].cells[k+1].innerText = Trip.line_name + " \n(" + timestring_sta + "-" + timestring_end + ")";
 		realwork[i] += (Math.floor(Trip.end_time / 100) - Math.floor(Trip.start_time / 100)) * 60 + (Trip.end_time % 100 - Trip.start_time % 100);
 	    }
 	    if (maxnum_cells < myList.row[i].trip.length*2 + 2)
@@ -520,11 +519,27 @@
 			 }
 		}
 	}
+	//休息超過１小時次數計算
+	var over_1hr=0;
+	for (var i = 0; i < myList.row.length; i++)
+	{
+		for (var j = 0; j < myList.row[i].trip.length-1; j++)
+		{
+			//myList.row[i].trip[j+1].start_time - myList.row[i].trip[j].end_time > 60 ?
+			var hr=Math.floor(myList.row[i].trip[j+1].start_time / 100) - Math.floor(myList.row[i].trip[j].end_time / 100);
+			var min=(myList.row[i].trip[j+1].start_time % 100) - (myList.row[i].trip[j].end_time % 100);
+			if( (hr*60 + min) > 60)
+				over_1hr++;
+		}
+	}
 	//num of drivers & avg worktime
 	document.getElementById("driver").innerHTML = num_drivers + "人";
 	document.getElementById("avgwork").innerHTML = Math.round(allwork / num_drivers) + "分";
 	document.getElementById("avgreturn").innerHTML = Math.round((allwork - all_realwork) / num_drivers) + "分"; //中退=總工作-實際工作
+	document.getElementById("over1hr").innerHTML = over_1hr + "次";
+	document.getElementById("avgrealwork").innerHTML = Math.round(all_realwork / num_drivers) + "分";
 
+	//事件設定
 	if (table != null) {
 		for (var i = 0; i < table.rows.length; i++)
 		{
@@ -534,7 +549,7 @@
 				var j = k*2 + 3;	//table index
 				table.rows[i].cells[j].draggable=true;
 				table.rows[i].cells[j].ondragstart = function(event){
-					document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
+					//document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
 					store(this,0);
 					this.style.backgroundColor = "#FF931E";
 
@@ -593,8 +608,20 @@
 					var thisrow = this.parentNode.rowIndex;
 					var thiscel = (this.cellIndex-3)/2;
 					document.getElementById("data1").innerHTML = myList.row[thisrow].trip[thiscel].line_name;
-					document.getElementById("data2").innerHTML = myList.row[thisrow].trip[thiscel].start_time;
-					document.getElementById("data3").innerHTML = myList.row[thisrow].trip[thiscel].end_time;
+					//timedata
+					var hr,min;
+					var timestring;
+					//start time
+					hr=Math.floor(myList.row[thisrow].trip[thiscel].start_time / 100);
+					min=myList.row[thisrow].trip[thiscel].start_time % 100;
+					timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
+					document.getElementById("data2").innerHTML = timestring;
+					timestring="";
+					//end time
+					hr=Math.floor(myList.row[thisrow].trip[thiscel].end_time / 100);
+					min=myList.row[thisrow].trip[thiscel].end_time % 100;
+					timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
+					document.getElementById("data3").innerHTML = timestring;
 				};
 			}
 			//every(in range) cell's events
@@ -616,12 +643,22 @@
 							this.style.backgroundColor = "#808080";	//gray
 					}
 					//document.getElementById("demo2").innerHTML = this.parentNode.rowIndex +"-"+ this.cellIndex;
-					document.getElementById("demo2").innerHTML = row_of_under +"-"+ cell_of_under;
+					//document.getElementById("demo2").innerHTML = row_of_under +"-"+ cell_of_under;
 					event.preventDefault();
-				};				
+				};
+				table.rows[i].cells[j].ondragend = function(event){
+					//refresh table
+					for(var q=table.rows.length-1;q>=0;q--)
+						table.deleteRow(q);
+					display_table();
+					//refresh pool
+					for(var q=pool.rows.length-1;q>=0;q--)
+						pool.deleteRow(q);
+					display_pool();
+				};
 				table.rows[i].cells[j].ondrop =function(event){
 					event.preventDefault();
-					document.getElementById("demo3").innerHTML = this.parentNode.rowIndex +"."+ this.cellIndex;
+					//document.getElementById("demo3").innerHTML = this.parentNode.rowIndex +"."+ this.cellIndex;
 					if(this.cellIndex <= myList.row[this.parentNode.rowIndex].trip.length*2+2 && this.cellIndex >= 2)//邊界防呆-移入邊界外無效
 					{
 						if((this.parentNode.rowIndex!=row_of_temp || this.cellIndex!=cell_of_temp) || (table_mark==1))
@@ -634,14 +671,15 @@
 								if (examine_ins(this.parentNode.rowIndex, this.cellIndex) == 0)
 									insert(this.parentNode.rowIndex, this.cellIndex, 0);
 								else
-									alert("insert failed");
+									alert("插入失敗，班次無法銜接");
+								
 							}
 						    	else				 //exchange
 						    	{
 								if (examine(this.parentNode.rowIndex, this.cellIndex) == 0)
 									exchange(this.parentNode.rowIndex, this.cellIndex);
 								else
-									alert("exchange failed");	
+									alert("交換失敗，班次無法銜接");	
 							}
 						}
 					}
@@ -667,8 +705,6 @@
 		}
 
 	}
-	
-	//
     }
     function display_pool()
     {
@@ -691,7 +727,7 @@
 			pool.rows[i].cells[j].draggable=true;
 			//events
 			pool.rows[i].cells[j].ondragstart = function(event){
-				document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
+				//document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
 				store(this,1);
 				this.style.backgroundColor = "#FF931E";
 				
@@ -758,10 +794,22 @@
 					pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#00FF00";
 					isread_pool = true;
 				}
-
 				document.getElementById("data1").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].line_name;
-				document.getElementById("data2").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].start_time;
-				document.getElementById("data3").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].end_time;
+				
+				//timedata
+				var hr,min;
+				var timestring;
+				//start time
+				hr=Math.floor(poolList.trip[row_pool*trips_per_row +cell_pool].start_time / 100);
+				min=poolList.trip[row_pool*trips_per_row +cell_pool].start_time % 100;
+				timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
+				document.getElementById("data2").innerHTML = timestring;
+				timestring="";
+				//end time
+				hr=Math.floor(poolList.trip[row_pool*trips_per_row +cell_pool].end_time / 100);
+				min=poolList.trip[row_pool*trips_per_row +cell_pool].end_time % 100;
+				timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
+				document.getElementById("data3").innerHTML = timestring;
 			};
 		}
 	    }
