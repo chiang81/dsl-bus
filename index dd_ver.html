@@ -1,0 +1,73 @@
+﻿<html>
+<head>
+
+<title>公車人工排班軟體</title>
+<meta charset="utf-8"/>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" language="javascript">
+google.load("jquery", "1.3");</script>
+<script type="text/javascript" src="dd.js"></script>
+<style>
+
+body{
+	font-family:Microsoft JhengHei;
+}
+table{
+
+	height: auto;
+
+	width: 90%;
+}
+#all_info{
+	width: 45%;
+	border-style:solid;
+}
+#trip_info{
+	width: 45%;
+	border-style:solid;
+}
+div.float{
+	float: left;
+	margin: 1%; 
+}
+#btn_new{
+	margin-left: 5%;
+}
+#pool_title{
+	margin-left: 5%;
+}
+</style>
+
+</head>
+
+
+
+<body>
+<p1 style="font-size:48pt;font-weight:bold;">公車人工排班軟體</p1><br>
+<p2 style="font-size:36pt;">小港區</p2><br>
+
+<div id="all_info" class="float">
+<p3 style="font-size:24pt;">
+司機數：<span id="driver"></span><br>
+平均工作時間：<span id="avgwork"></span><br>
+平均休息時間：<span id="avgreturn"></span><br>
+休息超過１小時：<span id="over1hr"></span><br>
+平均分勤時間：<span id="avgrealwork"></span><br>
+</p3>
+</div>
+
+<div id="trip_info" class="float">
+選擇車次之名稱： <span id="data1"></span><br>
+選擇車次之開始時間： <span id="data2"></span><br>
+選擇車次之結束時間： <span id="data3"></span><br>
+</div>
+
+<table align="center" id="table1" border="1" width="1140"  cellspacing="0" > </table>
+<input type="button" value="新增司機" id="btn_new">
+<br>
+<br>
+<p4  style="font-size:12pt;font-weight:bold;" id="pool_title">未排入車次</p4><br>
+<table align="center" id="tpool" border="1" width="1140"  cellspacing="0" > </table>
+
+</body>
+</html>
