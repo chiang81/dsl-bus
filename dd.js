@@ -1,5 +1,5 @@
 ﻿window.onload = function() {
-    //alert("F5 over");
+    alert("F5 over");
 
     /*
     //show date
@@ -125,11 +125,11 @@
 	}]
     };
     var table = document.getElementById("table1");
-    var totwork = new Array(myList.row.length);
-    var realwork = new Array(myList.row.length);
-    var allwork = 0;
-    var all_realwork = 0;
-    var maxnum_cells = 0;
+    //var totwork = new Array(myList.row.length);
+    //var realwork = new Array(myList.row.length);
+    //var allwork = 0;
+    //var all_realwork = 0;
+    //var maxnum_cells = 0;
     //use to trip pool
     var poolList={"trip": []};
     /*var poolList={"trip": [ {
@@ -175,8 +175,8 @@
     //definition of functions
     function store(Cell,i) {
 	//A->TEMP
-	row_of_temp = Cell.parentNode.rowIndex;
-	cell_of_temp = Cell.cellIndex; //table index
+	row_of_temp = Cell.parentNode.rowIndex;	//table index
+	cell_of_temp = Cell.cellIndex; 		//table index
 	color_of_temp = Cell.style.backgroundColor;
 
 	table_mark = i;
@@ -186,24 +186,26 @@
 	var oldCell, oldCell_pre, oldCell_next;
 	var thisCell, thisCell_pre, thisCell_next;
 
-	var new_col = (col-3)/2;	//json index
-	var new_cell_of_temp;		//json index
+	var new_col = (col-3)/2;		//json index
+	var new_row = row-1;			//json index
+	var new_cell_of_temp;			//json index
+	var new_row_of_temp = row_of_temp-1;	//json index
 
 	if(table_mark==0)	//cell from table
 	{
 		new_cell_of_temp = (cell_of_temp-3)/2;
 		if(new_cell_of_temp==0){
-		    oldCell = myList.row[row_of_temp].trip[new_cell_of_temp];
+		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
 		    oldCell_pre = {"end_time": 0};
-		    oldCell_next = myList.row[row_of_temp].trip[new_cell_of_temp+1];
-		} else if (new_cell_of_temp==myList.row[row_of_temp].trip.length-1){
-		    oldCell = myList.row[row_of_temp].trip[new_cell_of_temp];
-		    oldCell_pre = myList.row[row_of_temp].trip[new_cell_of_temp-1];
+		    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
+		} else if (new_cell_of_temp==myList.row[new_row_of_temp].trip.length-1){
+		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
+		    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
 		    oldCell_next = {"start_time": 9999};
 		} else{
-		    oldCell = myList.row[row_of_temp].trip[new_cell_of_temp];
-		    oldCell_pre = myList.row[row_of_temp].trip[new_cell_of_temp-1];
-		    oldCell_next = myList.row[row_of_temp].trip[new_cell_of_temp+1];
+		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
+		    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
+		    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
 		}
 	}
 	else if(table_mark==1)	//cell from pool
@@ -214,17 +216,17 @@
 	}
 
 	if(new_col==0){
-	    thisCell = myList.row[row].trip[new_col];
+	    thisCell = myList.row[new_row].trip[new_col];
 	    thisCell_pre = {"end_time": 0};
-	    thisCell_next = myList.row[row].trip[new_col+1];
-	} else if (new_col==myList.row[row].trip.length-1) {
-	    thisCell = myList.row[row].trip[new_col];
-	    thisCell_pre = myList.row[row].trip[new_col-1];
+	    thisCell_next = myList.row[new_row].trip[new_col+1];
+	} else if (new_col==myList.row[new_row].trip.length-1) {
+	    thisCell = myList.row[new_row].trip[new_col];
+	    thisCell_pre = myList.row[new_row].trip[new_col-1];
 	    thisCell_next = {"start_time": 9999};
 	} else {
-	    thisCell = myList.row[row].trip[new_col];
-	    thisCell_pre = myList.row[row].trip[new_col-1];
-	    thisCell_next = myList.row[row].trip[new_col+1];
+	    thisCell = myList.row[new_row].trip[new_col];
+	    thisCell_pre = myList.row[new_row].trip[new_col-1];
+	    thisCell_next = myList.row[new_row].trip[new_col+1];
 	}
 
 	//examine oldCell origin position time
@@ -248,11 +250,13 @@
 	var thisCell_pre,thisCell_next;
 
 	var new_col = (col)/2-1; 			//the right index of the gap
+	var new_row = row-1;				//json index
 	var new_cell_of_temp = (cell_of_temp-3)/2; 	//the index in json
+	var new_row_of_temp = row_of_temp-1;		//json index
 	
 	if(table_mark==0)	//cell from table
 	{
-		oldCell = myList.row[row_of_temp].trip[new_cell_of_temp];
+		oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
 	}
 	else if(table_mark==1)	//cell from pool
 	{
@@ -262,24 +266,24 @@
 	if(new_col==0)//start of array
 	{
 	    thisCell_pre = {"end_time": 0};
-	    if(myList.row[row].trip.length==0)
+	    if(myList.row[new_row].trip.length==0)
 	    {
 		thisCell_next = {"start_time": 9999};
 	    }
 	    else
 	    {
-		thisCell_next = myList.row[row].trip[new_col];
+		thisCell_next = myList.row[new_row].trip[new_col];
 	    }
 	} 
-	else if (new_col==myList.row[row].trip.length)//end of array
+	else if (new_col==myList.row[new_row].trip.length)//end of array
 	{
-	    thisCell_pre = myList.row[row].trip[new_col-1];
+	    thisCell_pre = myList.row[new_row].trip[new_col-1];
 	    thisCell_next = {"start_time": 9999};
 	} 
 	else
 	{
-	    thisCell_pre = myList.row[row].trip[new_col-1];
-	    thisCell_next = myList.row[row].trip[new_col];
+	    thisCell_pre = myList.row[new_row].trip[new_col-1];
+	    thisCell_next = myList.row[new_row].trip[new_col];
 	}
 
 	if(oldCell.start_time < thisCell_pre.end_time){
@@ -291,12 +295,14 @@
 	return 0;
     }
     function exchange(row, col) {
+	//alert(row_of_temp+","+cell_of_temp);
+	//alert(row+","+col);
 	if(table_mark==0)	//cell from table
-		var oldCell = myList.row[row_of_temp].trip[(cell_of_temp-3)/2]; //json index
+		var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
 	else if(table_mark==1)	//cell from pool
 		var oldCell = poolList.trip[row_of_temp*trips_per_row +cell_of_temp];
 
-	var thisCell = myList.row[row].trip[(col-3)/2];
+	var thisCell = myList.row[row-1].trip[(col-3)/2];
 	var temp;
 
 	//old->TEMP
@@ -308,33 +314,35 @@
 
 	//reverse input
 	if(table_mark==0)	//cell from table
-		myList.row[row_of_temp].trip[(cell_of_temp-3)/2] = oldCell; //json index
+		myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2] = oldCell; //json index
 	else if(table_mark==1)	//cell from pool
 		poolList.trip[row_of_temp*trips_per_row +cell_of_temp] = oldCell;
-	myList.row[row].trip[(col-3)/2] = thisCell;
+	myList.row[row-1].trip[(col-3)/2] = thisCell;
 
 	//alert("Exchange Finished!");
     }
     function insert(row,col,topool) { //topool=0: insert into table, topool=1: insert into pool
 	//var oldCell = myList.row[row_of_temp].trip[(cell_of_temp-3)/2];
+	//alert(row_of_temp+","+cell_of_temp);
+	//alert(row+","+col);
 	if(table_mark==0)	//oldcell from table
 	{
 		if(topool==0)
 		{
-			var oldCell = myList.row[row_of_temp].trip[(cell_of_temp-3)/2]; //json index
+			var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
 			//add obj after 'col/2-1'
-			myList.row[row].trip.splice(col/2-1,0,oldCell);
+			myList.row[row-1].trip.splice(col/2-1,0,oldCell);
 			//delete obj (delete 1 obj from cell_of_temp/2-1)
-			myList.row[row_of_temp].trip.splice((cell_of_temp-3)/2,1);
+			myList.row[row_of_temp-1].trip.splice((cell_of_temp-3)/2,1);
 		}
 		else if(topool==1)
 		{
-			var oldCell = myList.row[row_of_temp].trip[(cell_of_temp-3)/2]; //json index
+			var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
 			//poolList.trip[i*trips_per_row+j];
 			//add obj after 'row*trips_per_row+col'
 			poolList.trip.splice(row*trips_per_row+col,0,oldCell);
 			//delete obj (delete 1 obj from cell_of_temp/2-1)
-			myList.row[row_of_temp].trip.splice((cell_of_temp-3)/2,1);
+			myList.row[row_of_temp-1].trip.splice((cell_of_temp-3)/2,1);
 		}
 	}
 	else if(table_mark==1)	//oldcell from pool
@@ -343,7 +351,7 @@
 		{
 			var oldCell = poolList.trip[row_of_temp*trips_per_row +cell_of_temp];
 			//add obj after 'col/2-1'
-			myList.row[row].trip.splice(col/2-1,0,oldCell);
+			myList.row[row-1].trip.splice(col/2-1,0,oldCell);
 			//delete obj (delete 1 obj from 'row_of_temp*trips_per_row +cell_of_temp')
 			poolList.trip.splice( row_of_temp*trips_per_row +cell_of_temp ,1);
 		}
@@ -377,7 +385,7 @@
 	    }
 
 	    //delete obj (delete 1 obj from row)
-	    myList.row.splice(row,1);
+	    myList.row.splice(row-1,1);
 
 	    //refresh table
 	    for(var q=table.rows.length-1;q>=0;q--)
@@ -388,11 +396,11 @@
     function display_table() {
 	//-----------bus table--------------//
 	table = document.getElementById("table1");
-	totwork = new Array(myList.row.length);
-	realwork = new Array(myList.row.length);
-	allwork = 0;
-	all_realwork = 0;
-	maxnum_cells = 0;
+	var totwork = new Array(myList.row.length);
+	var realwork = new Array(myList.row.length);
+	var allwork = 0;
+	var all_realwork = 0;
+	var maxnum_cells = 0;
 
 	document.getElementById("btn_new").onclick= function(){
 	    add_row();
@@ -404,6 +412,7 @@
 
 	    //Serial Number
 	    table.rows[i].insertCell(0);
+	    table.rows[i].cells[0].align="center";
 	    table.rows[i].cells[0].innerText = i + 1;
 	    
 	    //button cell
@@ -417,27 +426,20 @@
 	    table.rows[i].cells[1].appendChild(btn_del);
 	    table.rows[i].cells[1].align="center";
 	    btn_del.onclick= function(){
-		    if(myList.row[this.parentNode.parentNode.rowIndex].trip.length ==0) //delete null row
+		    if(myList.row[this.parentNode.parentNode.rowIndex-1].trip.length ==0) //delete null row
 			del_row(this.parentNode.parentNode.rowIndex);
 		    else
 		    {
-			    /*if(myList.row.length > 1)
-			    {*/
-			    //transport trips
-			    while(myList.row[this.parentNode.parentNode.rowIndex].trip.length > 0)
+			    while(myList.row[this.parentNode.parentNode.rowIndex-1].trip.length > 0)
 			    {
-				var X=myList.row[this.parentNode.parentNode.rowIndex].trip[0];
+				var X=myList.row[this.parentNode.parentNode.rowIndex-1].trip[0];
 				//delete 1 obj from 0
-				myList.row[this.parentNode.parentNode.rowIndex].trip.splice(0,1);
+				myList.row[this.parentNode.parentNode.rowIndex-1].trip.splice(0,1);
 				//add obj after 'poolList.trip.length'
 				poolList.trip.splice(poolList.trip.length,0,X);
 			    }
 			    //delete null row
 			    del_row(this.parentNode.parentNode.rowIndex);
-			    /*}
-			    else
-				    alert("You can't delete anymore. Otherwise, there will be no driver!!");*/
-			    //refresh pool
 			    for(var q=pool.rows.length-1;q>=0;q--)
 				    pool.deleteRow(q);
 			    display_pool();
@@ -480,8 +482,22 @@
 	    if (maxnum_cells < myList.row[i].trip.length*2 + 2)
 		{maxnum_cells = myList.row[i].trip.length*2 + 2;}
 	}
-
-	//total worktime per driver
+	//休息超過１小時次數計算
+	var over_1hr = new Array(myList.row.length);
+	var allover_1hr = 0;
+	for (var i = 0, j; i < myList.row.length; i++)
+	{
+		for (j = 0, over_1hr[i] = 0; j < myList.row[i].trip.length-1; j++)
+		{
+			//myList.row[i].trip[j+1].start_time - myList.row[i].trip[j].end_time > 60 ?
+			var hr=Math.floor(myList.row[i].trip[j+1].start_time / 100) - Math.floor(myList.row[i].trip[j].end_time / 100);
+			var min=(myList.row[i].trip[j+1].start_time % 100) - (myList.row[i].trip[j].end_time % 100);
+			if( (hr*60 + min) > 60)
+				over_1hr[i]++;
+		}
+		allover_1hr += over_1hr[i];
+	}
+	//統計欄位們
 	for (var i = 0, j; i < myList.row.length; i++) {
 	    //add cell to 'maxnum_cells' & add the rightest cell
 	    for (j = myList.row[i].trip.length*2 + 2; j < maxnum_cells ; j++) {
@@ -492,22 +508,69 @@
 	    table.rows[i].insertCell(j);
 	    table.rows[i].cells[j].style.width = '20px';
 
-	    //sum cell
+	    //分勤時間
 	    j++;
 	    table.rows[i].insertCell(j);
+	    table.rows[i].cells[j].align="right";
+	    table.rows[i].cells[j].innerText = realwork[i] + "分";
+	    all_realwork += realwork[i];
+	    //工作時間
+	    j++;
+	    table.rows[i].insertCell(j);
+	    table.rows[i].cells[j].align="right";
 	    table.rows[i].cells[j].innerText = totwork[i] + "分";
 	    allwork += totwork[i];
-	    all_realwork += realwork[i];
+	    //平均休息時間
+	    j++;
+	    table.rows[i].insertCell(j);
+	    table.rows[i].cells[j].align="right";
+	    table.rows[i].cells[j].innerText = Math.floor((totwork[i] - realwork[i])/(myList.row[i].trip.length - 1)) + "分";
+	    //休息超過1小時
+	    j++;
+	    table.rows[i].insertCell(j);
+	    table.rows[i].cells[j].align="right";
+	    table.rows[i].cells[j].innerText = over_1hr[i] + "次";
 	}
+
+	//表格標頭
+	table.insertRow(0);
+	{
+		//***序號
+		table.rows[0].insertCell(0);
+		table.rows[0].cells[0].align="center";
+		table.rows[0].cells[0].innerText = "序號";
+		//***刪除
+		table.rows[0].insertCell(1);
+		table.rows[0].cells[1].align="center";
+		table.rows[0].cells[1].innerText = "刪除";
+		//***車次
+		table.rows[0].insertCell(2);
+		table.rows[0].cells[2].align="center";
+		table.rows[0].cells[2].colSpan= (maxnum_cells-2)+1 ; // -序號 -刪除 +最右插入格
+		table.rows[0].cells[2].innerText = "車次";
+		//***分勤時間
+		table.rows[0].insertCell(3);
+		table.rows[0].cells[3].align="center";
+		table.rows[0].cells[3].innerText = "分勤時間";
+		//***工作時間
+		table.rows[0].insertCell(4);
+		table.rows[0].cells[4].align="center";
+		table.rows[0].cells[4].innerText = "工作時間";
+		//***平均休息時間
+		table.rows[0].insertCell(5);
+		table.rows[0].cells[5].align="center";
+		table.rows[0].cells[5].innerText = "平均休息時間";
+		//***休息超過1小時
+		table.rows[0].insertCell(6);
+		table.rows[0].cells[6].align="center";
+		table.rows[0].cells[6].innerText = "休息超過\n１小時";
+	}
+
 	//實際司機數
 	var num_drivers = 0;
 	for (var i = 0; i < myList.row.length; i++)
-	{
 		if(myList.row[i].trip.length > 0)
-		{
 			num_drivers++;
-		}
-	}
 	//工作時間檢查
 	for (var i = 0; i < myList.row.length; i++)
 	{
@@ -519,32 +582,20 @@
 			 }
 		}
 	}
-	//休息超過１小時次數計算
-	var over_1hr=0;
-	for (var i = 0; i < myList.row.length; i++)
-	{
-		for (var j = 0; j < myList.row[i].trip.length-1; j++)
-		{
-			//myList.row[i].trip[j+1].start_time - myList.row[i].trip[j].end_time > 60 ?
-			var hr=Math.floor(myList.row[i].trip[j+1].start_time / 100) - Math.floor(myList.row[i].trip[j].end_time / 100);
-			var min=(myList.row[i].trip[j+1].start_time % 100) - (myList.row[i].trip[j].end_time % 100);
-			if( (hr*60 + min) > 60)
-				over_1hr++;
-		}
-	}
 	//num of drivers & avg worktime
 	document.getElementById("driver").innerHTML = num_drivers + "人";
 	document.getElementById("avgwork").innerHTML = Math.round(allwork / num_drivers) + "分";
 	document.getElementById("avgreturn").innerHTML = Math.round((allwork - all_realwork) / num_drivers) + "分"; //中退=總工作-實際工作
-	document.getElementById("over1hr").innerHTML = over_1hr + "次";
+	document.getElementById("over1hr").innerHTML = allover_1hr + "次";
 	document.getElementById("avgrealwork").innerHTML = Math.round(all_realwork / num_drivers) + "分";
 
 	//事件設定
 	if (table != null) {
-		for (var i = 0; i < table.rows.length; i++)
+		//標頭列無事件
+		for (var i = 1; i < table.rows.length; i++)
 		{
 			//data cells are draggable
-			for (var k = 0; k < myList.row[i].trip.length ; k++)//json index
+			for (var k = 0; k < myList.row[i-1].trip.length ; k++)//json index
 			{
 				var j = k*2 + 3;	//table index
 				table.rows[i].cells[j].draggable=true;
@@ -561,6 +612,7 @@
 					event.dataTransfer.setData("Text", event.target.id);
 				};
 				table.rows[i].cells[j].onclick =function(){
+					//alert(this.parentNode.rowIndex +","+ this.cellIndex);
 					//read data color change
 					if(!isread_tb && !isread_pool)
 					{
@@ -605,8 +657,8 @@
 						}
 					}
 
-					var thisrow = this.parentNode.rowIndex;
-					var thiscel = (this.cellIndex-3)/2;
+					var thisrow = this.parentNode.rowIndex-1;	//JSON index
+					var thiscel = (this.cellIndex-3)/2;		//JSON index
 					document.getElementById("data1").innerHTML = myList.row[thisrow].trip[thiscel].line_name;
 					//timedata
 					var hr,min;
@@ -639,7 +691,7 @@
 						cell_of_under	= this.cellIndex;
 						color_of_under	= this.style.backgroundColor;
 						//new and legal 'overed', then change color
-						if(this.cellIndex <= myList.row[this.parentNode.rowIndex].trip.length*2+2 && this.cellIndex >= 2)//邊界防呆
+						if(this.cellIndex <= myList.row[this.parentNode.rowIndex-1].trip.length*2+2 && this.cellIndex >= 2)//邊界防呆
 							this.style.backgroundColor = "#808080";	//gray
 					}
 					//document.getElementById("demo2").innerHTML = this.parentNode.rowIndex +"-"+ this.cellIndex;
@@ -659,7 +711,7 @@
 				table.rows[i].cells[j].ondrop =function(event){
 					event.preventDefault();
 					//document.getElementById("demo3").innerHTML = this.parentNode.rowIndex +"."+ this.cellIndex;
-					if(this.cellIndex <= myList.row[this.parentNode.rowIndex].trip.length*2+2 && this.cellIndex >= 2)//邊界防呆-移入邊界外無效
+					if(this.cellIndex <= myList.row[this.parentNode.rowIndex-1].trip.length*2+2 && this.cellIndex >= 2)//邊界防呆-移入邊界外無效
 					{
 						if((this.parentNode.rowIndex!=row_of_temp || this.cellIndex!=cell_of_temp) || (table_mark==1))
 						//重複防呆-座標完全相同不得進入
@@ -688,15 +740,14 @@
 					else if(table_mark==1)
 						pool.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
 					table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = color_of_under;
-					
-					//refresh table
+					/*//refresh table
 					for(var q=table.rows.length-1;q>=0;q--)
 						table.deleteRow(q);
 					display_table();
 					//refresh pool
 					for(var q=pool.rows.length-1;q>=0;q--)
 						pool.deleteRow(q);
-					display_pool();
+					display_pool();*/
 					//isread reset
 					isread_tb   = false;
 					isread_pool = false;
@@ -722,8 +773,17 @@
 
 		if(Trip)
 		{
-			pool.rows[i].cells[j].align="center";	
-			pool.rows[i].cells[j].innerText = Trip.line_name + " \n(" + Trip.start_time + "-" + Trip.end_time + ")";
+			pool.rows[i].cells[j].align="center";
+			var timestring_sta, timestring_end;
+			var hr,min;
+			hr=Math.floor(Trip.start_time / 100);
+			min=Trip.start_time % 100;
+			timestring_sta= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min;
+			hr=Math.floor(Trip.end_time / 100);
+			min=Trip.end_time % 100;
+			timestring_end= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min;
+			pool.rows[i].cells[j].innerText = Trip.line_name + " \n(" + timestring_sta + "-" + timestring_end + ")";
+
 			pool.rows[i].cells[j].draggable=true;
 			//events
 			pool.rows[i].cells[j].ondragstart = function(event){
@@ -835,14 +895,14 @@
 		else if(table_mark==1)
 			pool.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
 		table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = color_of_under;
-		//refresh table
+		/*//refresh table
 		for(var q=table.rows.length-1;q>=0;q--)
 			table.deleteRow(q);
 		display_table();
 		//refresh pool
 		for(var q=pool.rows.length-1;q>=0;q--)
 			pool.deleteRow(q);
-		display_pool();
+		display_pool();*/
 		//isread reset
 		isread_tb   = false;
 		isread_pool = false;
