@@ -1,5 +1,5 @@
 ﻿window.onload = function() {
-    alert("F5 over");
+    //alert("F5 over");
 
     /*
     //show date
@@ -419,12 +419,13 @@
 	    table.rows[i].insertCell(1);
 	    //del button
 	    var btn_del = document.createElement("button");
-	    btn_del.style.width="40px";
-	    btn_del.style.height="30px";
+	    btn_del.style.width="100%";
+	    btn_del.style.height="100%";
 	    btn_del.innerHTML="刪除";
+	    table.rows[i].cells[1].className="btn";
 	    
+	    table.rows[i].cells[1].style.padding="0px";
 	    table.rows[i].cells[1].appendChild(btn_del);
-	    table.rows[i].cells[1].align="center";
 	    btn_del.onclick= function(){
 		    if(myList.row[this.parentNode.parentNode.rowIndex-1].trip.length ==0) //delete null row
 			del_row(this.parentNode.parentNode.rowIndex);
@@ -448,7 +449,6 @@
 			    isread_pool = false;
 		    }
 	    };
-	    btn_del.style.width=btn_del.parentNode.width;
 
 	    //set totwork
 	    if(myList.row[i].trip.length > 0)
@@ -468,6 +468,7 @@
 		
 		table.rows[i].insertCell(k+1);
 		table.rows[i].cells[k+1].align="center";
+		table.rows[i].cells[k+1].style.padding="5px";
 		var timestring_sta, timestring_end;
 		var hr,min;
 		hr=Math.floor(Trip.start_time / 100);
@@ -511,24 +512,24 @@
 	    //分勤時間
 	    j++;
 	    table.rows[i].insertCell(j);
-	    table.rows[i].cells[j].align="right";
+	    table.rows[i].cells[j].align="center";
 	    table.rows[i].cells[j].innerText = realwork[i] + "分";
 	    all_realwork += realwork[i];
 	    //工作時間
 	    j++;
 	    table.rows[i].insertCell(j);
-	    table.rows[i].cells[j].align="right";
+	    table.rows[i].cells[j].align="center";
 	    table.rows[i].cells[j].innerText = totwork[i] + "分";
 	    allwork += totwork[i];
 	    //平均休息時間
 	    j++;
 	    table.rows[i].insertCell(j);
-	    table.rows[i].cells[j].align="right";
+	    table.rows[i].cells[j].align="center";
 	    table.rows[i].cells[j].innerText = Math.floor((totwork[i] - realwork[i])/(myList.row[i].trip.length - 1)) + "分";
 	    //休息超過1小時
 	    j++;
 	    table.rows[i].insertCell(j);
-	    table.rows[i].cells[j].align="right";
+	    table.rows[i].cells[j].align="center";
 	    table.rows[i].cells[j].innerText = over_1hr[i] + "次";
 	}
 
@@ -559,7 +560,7 @@
 		//***平均休息時間
 		table.rows[0].insertCell(5);
 		table.rows[0].cells[5].align="center";
-		table.rows[0].cells[5].innerText = "平均休息時間";
+		table.rows[0].cells[5].innerText = "平均\n休息時間";
 		//***休息超過1小時
 		table.rows[0].insertCell(6);
 		table.rows[0].cells[6].align="center";
@@ -602,7 +603,7 @@
 				table.rows[i].cells[j].ondragstart = function(event){
 					//document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
 					store(this,0);
-					this.style.backgroundColor = "#FF931E";
+					this.style.backgroundColor = "#FDB03B";
 
 					//data of this cell 
 					row_of_under	= this.parentNode.rowIndex;
@@ -619,7 +620,7 @@
 						row_read_tb  = this.parentNode.rowIndex;
 						cell_read_tb = this.cellIndex;
     						color_read_tb= this.style.backgroundColor;
-						table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#00FF00";
+						table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
 						isread_tb = true;
 					}
 					else if(!isread_tb && isread_pool)
@@ -632,7 +633,7 @@
 						row_read_tb  = this.parentNode.rowIndex;
 						cell_read_tb = this.cellIndex;
     						color_read_tb= this.style.backgroundColor;
-						table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#00FF00";
+						table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
 						isread_tb = true;
 					}
 					else if(isread_tb && !isread_pool)
@@ -652,7 +653,7 @@
 							row_read_tb  = this.parentNode.rowIndex;
 							cell_read_tb = this.cellIndex;
     							color_read_tb= this.style.backgroundColor;
-							table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#00FF00";
+							table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
 							isread_tb = true;
 						}
 					}
@@ -765,7 +766,7 @@
 	    pool.insertRow();
 
 	    //add cell to 'trips_per_row'
-	    for (var j = 0 ; j < trips_per_row && num >= 0 ; j++, num--) {
+	    for (var j = 0 ; j < trips_per_row /*&& num >= 0 */; j++, num--) {
 		var Trip = poolList.trip[i*trips_per_row+j];
 		pool.rows[i].insertCell(j);
 		pool.rows[i].cells[j].style.width = "100px";
@@ -789,7 +790,7 @@
 			pool.rows[i].cells[j].ondragstart = function(event){
 				//document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
 				store(this,1);
-				this.style.backgroundColor = "#FF931E";
+				this.style.backgroundColor = "#22B573";
 				
 				//default left-up
 				row_of_under	= 0;
@@ -817,7 +818,7 @@
 					row_read_pool  = this.parentNode.rowIndex;
 					cell_read_pool = this.cellIndex;
     					color_read_pool= this.style.backgroundColor;
-					pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#00FF00";
+					pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#22B573";
 					isread_pool = true;
 				}
 				else if(!isread_tb && isread_pool)
@@ -837,7 +838,7 @@
 						row_read_pool  = this.parentNode.rowIndex;
 						cell_read_pool = this.cellIndex;
     						color_read_pool= this.style.backgroundColor;
-						pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#00FF00";
+						pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#22B573";
 						isread_pool = true;
 					}
 				}
@@ -851,7 +852,7 @@
 					row_read_pool  = this.parentNode.rowIndex;
 					cell_read_pool = this.cellIndex;
     					color_read_pool= this.style.backgroundColor;
-					pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#00FF00";
+					pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#22B573";
 					isread_pool = true;
 				}
 				document.getElementById("data1").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].line_name;
@@ -876,8 +877,10 @@
 	}
 
 	//insert event of lastcell of pool
-	var lastrows_pool = pool.rows.length-1;				//table index
-	var lastcell_pool = pool.rows[lastrows_pool].cells.length-1;	//table index
+	//var lastrows_pool = pool.rows.length-1;				//table index
+	//var lastcell_pool = pool.rows[lastrows_pool].cells.length-1;	//table index
+	var lastrows_pool = Math.floor(poolList.trip.length/trips_per_row);	//table index
+	var lastcell_pool = poolList.trip.length%trips_per_row;			//table index
 	pool.rows[lastrows_pool].cells[lastcell_pool].ondragover =function(event){
 		event.preventDefault();
 		//old 'overed'
