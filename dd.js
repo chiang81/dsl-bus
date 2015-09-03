@@ -627,6 +627,7 @@
 					{
 						//close pool color-change
 						pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = color_read_pool;
+						pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#000000";
 						isread_pool = false;
 
 						//open table color-change
@@ -643,6 +644,7 @@
 						{
 							table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = color_read_tb;
 							isread_tb = false;
+							remove_data();
 							document.getElementById("data1").innerHTML ="";
 							document.getElementById("data2").innerHTML ="";
 							document.getElementById("data3").innerHTML ="";
@@ -693,7 +695,24 @@
 						color_of_under	= this.style.backgroundColor;
 						//new and legal 'overed', then change color
 						if(this.cellIndex <= myList.row[this.parentNode.rowIndex-1].trip.length*2+2 && this.cellIndex >= 2)//邊界防呆
-							this.style.backgroundColor = "#808080";	//gray
+						{
+							if (this.cellIndex %2 == 0)	 //insert
+				    			{
+								if (examine_ins(this.parentNode.rowIndex, this.cellIndex) == 0)
+									this.style.backgroundColor = "#808080";	//gray
+								else
+									this.style.backgroundColor = "#C1272D";	//sta. red
+								
+							}
+						    	else				 //exchange
+						    	{
+								if (examine(this.parentNode.rowIndex, this.cellIndex) == 0)
+									this.style.backgroundColor = "#808080";	//gray
+								else
+									this.style.backgroundColor = "#C1272D";	//sta. red	
+							}
+							//this.style.backgroundColor = "#808080";	//gray
+						}
 					}
 					//document.getElementById("demo2").innerHTML = this.parentNode.rowIndex +"-"+ this.cellIndex;
 					//document.getElementById("demo2").innerHTML = row_of_under +"-"+ cell_of_under;
@@ -791,6 +810,7 @@
 				//document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
 				store(this,1);
 				this.style.backgroundColor = "#22B573";
+				this.style.color = "#FFFFFF";
 				
 				//default left-up
 				row_of_under	= 0;
@@ -800,6 +820,7 @@
 				event.dataTransfer.setData("Text", event.target.id);
 			};
 			pool.rows[i].cells[j].ondragend = function(event){
+				pool.rows[row_of_temp].cells[cell_of_temp].style.color = "#FFFFFF";
 				//refresh table
 				for(var q=table.rows.length-1;q>=0;q--)
 					table.deleteRow(q);
@@ -819,6 +840,7 @@
 					cell_read_pool = this.cellIndex;
     					color_read_pool= this.style.backgroundColor;
 					pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#22B573";
+					pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#FFFFFF";
 					isread_pool = true;
 				}
 				else if(!isread_tb && isread_pool)
@@ -827,6 +849,7 @@
 					//reclick the same cell
 					{
 						pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = color_read_pool;
+						pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#000000";
 						isread_pool = false;
 						document.getElementById("data1").innerHTML ="";
 						document.getElementById("data2").innerHTML ="";
@@ -835,10 +858,12 @@
 					else
 					{
 						pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = color_read_pool;
+						pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#000000";
 						row_read_pool  = this.parentNode.rowIndex;
 						cell_read_pool = this.cellIndex;
     						color_read_pool= this.style.backgroundColor;
 						pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#22B573";
+						pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#FFFFFF";
 						isread_pool = true;
 					}
 				}
@@ -853,6 +878,7 @@
 					cell_read_pool = this.cellIndex;
     					color_read_pool= this.style.backgroundColor;
 					pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = "#22B573";
+					pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#FFFFFF";
 					isread_pool = true;
 				}
 				document.getElementById("data1").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].line_name;
