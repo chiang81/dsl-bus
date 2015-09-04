@@ -20,107 +20,155 @@
 	    "trip": [{
 		"line_name": "12_3",
 		"start_time": 600,
-		"end_time": 740
+		"end_time": 740,
+		"from_sta": "TN",
+		"to_sta": "LD"
 	    }, {
 		"line_name": "R3_15",
 		"start_time": 815,
-		"end_time": 1018
+		"end_time": 1018,
+		"from_sta": "LD",
+		"to_sta": "KS"
 	    }, {
 		"line_name": "12_18",
 		"start_time": 1105,
-		"end_time": 1115
+		"end_time": 1115,
+		"from_sta": "KS",
+		"to_sta": "ZI"
 	    }, {
 		"line_name": "12_24",
 		"start_time": 1435,
-		"end_time": 1535
+		"end_time": 1535,
+		"from_sta": "ZI",
+		"to_sta": "GS"
 	    }]
 	}, {
 	    "trip": [{
 		"line_name": "12_1",
 		"start_time": 545,
-		"end_time": 715
+		"end_time": 715,
+		"from_sta": "TN",
+		"to_sta": "LD"
 	    }, {
 		"line_name": "12_9",
 		"start_time": 740,
-		"end_time": 940
+		"end_time": 940,
+		"from_sta": "LD",
+		"to_sta": "CT"
 	    }, {
 		"line_name": "12_16",
 		"start_time": 1015,
-		"end_time": 1215
+		"end_time": 1215,
+		"from_sta": "CT",
+		"to_sta": "NZ"
 	    }, {
 		"line_name": "12_22",
 		"start_time": 1245,
-		"end_time": 1445
+		"end_time": 1445,
+		"from_sta": "NZ",
+		"to_sta": "LD"
 	    }]
 	}, {
 	    "trip": [{
 		"line_name": "12_2",
 		"start_time": 600,
-		"end_time": 738
+		"end_time": 738,
+		"from_sta": "TN",
+		"to_sta": "KS"
 	    }, {
 		"line_name": "R8_10",
 		"start_time": 800,
-		"end_time": 945
+		"end_time": 945,
+		"from_sta": "KS",
+		"to_sta": "ZI"
 	    }, {
 		"line_name": "12_17",
 		"start_time": 1040,
-		"end_time": 1240
+		"end_time": 1240,
+		"from_sta": "ZI",
+		"to_sta": "GS"
 	    }, {
 		"line_name": "12_23",
 		"start_time": 1310,
-		"end_time": 1510
+		"end_time": 1510,
+		"from_sta": "GS",
+		"to_sta": "TN"
 	    }, {
 		"line_name": "DLP_5",
 		"start_time": 1720,
-		"end_time": 1810
+		"end_time": 1810,
+		"from_sta": "TN",
+		"to_sta": "LZ"
 	    }, {
 		"line_name": "DLP_7",
 		"start_time": 1810,
-		"end_time": 1900
+		"end_time": 1900,
+		"from_sta": "LZ",
+		"to_sta": "KS"
 	    }]
 	}, {
 	    "trip": [{
 		"line_name": "12_4",
 		"start_time": 620,
-		"end_time": 825
+		"end_time": 825,
+		"from_sta": "TN",
+		"to_sta": "GS"
 	    }, {
 		"line_name": "12_12",
 		"start_time": 840,
-		"end_time": 1040
+		"end_time": 1040,
+		"from_sta": "GS",
+		"to_sta": "KS"
 	    }, {
 		"line_name": "12_19",
 		"start_time": 1130,
-		"end_time": 1330
+		"end_time": 1330,
+		"from_sta": "KS",
+		"to_sta": "ZI"
 	    }, {
 		"line_name": "12_35",
 		"start_time": 1740,
-		"end_time": 1940
+		"end_time": 1940,
+		"from_sta": "ZI",
+		"to_sta": "TN"
 	    }]
 	}, {
 	    "trip": [{
 		"line_name": "12_6",
 		"start_time": 835,
-		"end_time": 905
+		"end_time": 905,
+		"from_sta": "GS",
+		"to_sta": "LD"
 	    }, {
 		"line_name": "12_15",
 		"start_time": 950,
-		"end_time": 1150
+		"end_time": 1150,
+		"from_sta": "LD",
+		"to_sta": "TN"
 	    }, {
 		"line_name": "12_21",
 		"start_time": 1220,
-		"end_time": 1420
+		"end_time": 1420,
+		"from_sta": "TN",
+		"to_sta": "NZ"
 	    }, {
 		"line_name": "R8_20",
 		"start_time": 1545,
-		"end_time": 1715
+		"end_time": 1715,
+		"from_sta": "NZ",
+		"to_sta": "ZI"
 	    }, {
 		"line_name": "DLP_6",
 		"start_time": 1740,
-		"end_time": 1810
+		"end_time": 1810,
+		"from_sta": "ZI",
+		"to_sta": "KS"
 	    }, {
 		"line_name": "DLP_8",
 		"start_time": 1815,
-		"end_time": 1920
+		"end_time": 1920,
+		"from_sta": "KS",
+		"to_sta": "GS"
 	    }]
 	}]
     };
@@ -132,28 +180,6 @@
     //var maxnum_cells = 0;
     //use to trip pool
     var poolList={"trip": []};
-    /*var poolList={"trip": [ {
-		"line_name": "TEST_1",
-		"start_time": 1300,
-		"end_time": 1500
-	    }, {
-		"line_name": "TEST_2",
-		"start_time": 815,
-		"end_time": 1000
-	    }, {
-		"line_name": "TEST_3",
-		"start_time": 1230,
-		"end_time": 1400
-	    }, {
-		"line_name": "TEST_4",
-		"start_time": 2200,
-		"end_time": 2330
-	    }, {
-		"line_name": "TEST_5",
-		"start_time": 1200,
-		"end_time": 1430
-	    }
-	    ]};*/
     var pool = document.getElementById("tpool");
     var trips_per_row = 5;
     //use to store
@@ -191,18 +217,27 @@
 	var new_cell_of_temp;			//json index
 	var new_row_of_temp = row_of_temp-1;	//json index
 
+	thisCell = myList.row[new_row].trip[new_col];
+	
 	if(table_mark==0)	//cell from table
 	{
 		new_cell_of_temp = (cell_of_temp-3)/2;
-		if(new_cell_of_temp==0){
+		if(new_cell_of_temp==0)
+		{
 		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
 		    oldCell_pre = {"end_time": 0};
+		    oldCell_pre.to_sta = thisCell.from_sta;
 		    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
-		} else if (new_cell_of_temp==myList.row[new_row_of_temp].trip.length-1){
+		}
+		else if (new_cell_of_temp==myList.row[new_row_of_temp].trip.length-1)
+		{
 		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
 		    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
 		    oldCell_next = {"start_time": 9999};
-		} else{
+		    oldCell_next.from_sta = thisCell.to_sta;
+		}
+		else
+		{
 		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
 		    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
 		    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
@@ -215,33 +250,55 @@
 		oldCell_next = {"start_time": 9999};
 	}
 
-	if(new_col==0){
-	    thisCell = myList.row[new_row].trip[new_col];
+	if(new_col==0)
+	{
+	    //thisCell = myList.row[new_row].trip[new_col];
 	    thisCell_pre = {"end_time": 0};
+	    thisCell_pre.to_sta = oldCell.from_sta;
+
 	    thisCell_next = myList.row[new_row].trip[new_col+1];
-	} else if (new_col==myList.row[new_row].trip.length-1) {
-	    thisCell = myList.row[new_row].trip[new_col];
+	}
+	else if (new_col==myList.row[new_row].trip.length-1)
+	{
+	    //thisCell = myList.row[new_row].trip[new_col];
 	    thisCell_pre = myList.row[new_row].trip[new_col-1];
+	    
 	    thisCell_next = {"start_time": 9999};
-	} else {
-	    thisCell = myList.row[new_row].trip[new_col];
+	    thisCell_next.from_sta = oldCell.to_sta;
+	}
+	else
+	{
+	    //thisCell = myList.row[new_row].trip[new_col];
 	    thisCell_pre = myList.row[new_row].trip[new_col-1];
 	    thisCell_next = myList.row[new_row].trip[new_col+1];
 	}
 
 	//examine oldCell origin position time
-	if (thisCell.start_time < oldCell_pre.end_time) {
+	if (thisCell.start_time < oldCell_pre.end_time)
+	{
 	    return -1;
 	}
-	if (thisCell.end_time > oldCell_next.start_time) {
+	if (thisCell.end_time > oldCell_next.start_time)
+	{
 	    return -1;
 	}
 	//examine thisCell origin position time
-	if (oldCell.start_time < thisCell_pre.end_time) {
+	if (oldCell.start_time < thisCell_pre.end_time)
+	{
 	    return -1;
 	}
-	if (oldCell.end_time > thisCell_next.start_time) {
+	if (oldCell.end_time > thisCell_next.start_time)
+	{
 	    return -1;
+	}
+	//examine O/D station
+	if((thisCell.from_sta != oldCell_pre.to_sta) || (thisCell.to_sta != oldCell_next.from_sta))
+	{
+		return -1;
+	}
+	if((oldCell.from_sta != thisCell_pre.to_sta) || (oldCell.to_sta != thisCell_next.from_sta))
+	{
+		return -1;
 	}
 	return 0
     }
@@ -266,9 +323,11 @@
 	if(new_col==0)//start of array
 	{
 	    thisCell_pre = {"end_time": 0};
-	    if(myList.row[new_row].trip.length==0)
+	    thisCell_pre.to_sta = oldCell.from_sta;
+	    if(myList.row[new_row].trip.length==0)	//insert to null row
 	    {
 		thisCell_next = {"start_time": 9999};
+		thisCell_next.from_sta = oldCell.to_sta;
 	    }
 	    else
 	    {
@@ -279,18 +338,24 @@
 	{
 	    thisCell_pre = myList.row[new_row].trip[new_col-1];
 	    thisCell_next = {"start_time": 9999};
+	    thisCell_next.from_sta = oldCell.to_sta;
 	} 
 	else
 	{
 	    thisCell_pre = myList.row[new_row].trip[new_col-1];
 	    thisCell_next = myList.row[new_row].trip[new_col];
 	}
-
+	//examine thisCell origin position time
 	if(oldCell.start_time < thisCell_pre.end_time){
 	    return -1;
 	}
 	if(oldCell.end_time > thisCell_next.start_time){
 	    return -1;
+	}
+	//examine O/D station
+	if((oldCell.from_sta != thisCell_pre.to_sta) || (oldCell.to_sta != thisCell_next.from_sta))
+	{
+		return -1;
 	}
 	return 0;
     }
@@ -323,8 +388,6 @@
     }
     function insert(row,col,topool) { //topool=0: insert into table, topool=1: insert into pool
 	//var oldCell = myList.row[row_of_temp].trip[(cell_of_temp-3)/2];
-	//alert(row_of_temp+","+cell_of_temp);
-	//alert(row+","+col);
 	if(table_mark==0)	//oldcell from table
 	{
 		if(topool==0)
@@ -477,7 +540,7 @@
 		hr=Math.floor(Trip.end_time / 100);
 		min=Trip.end_time % 100;
 		timestring_end= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min;
-		table.rows[i].cells[k+1].innerText = Trip.line_name + " \n(" + timestring_sta + "-" + timestring_end + ")";
+		table.rows[i].cells[k+1].innerText = Trip.line_name + " \n(" + timestring_sta + "-" + timestring_end + ")" + "\n" + Trip.from_sta + "->" + Trip.to_sta;
 		realwork[i] += (Math.floor(Trip.end_time / 100) - Math.floor(Trip.start_time / 100)) * 60 + (Trip.end_time % 100 - Trip.start_time % 100);
 	    }
 	    if (maxnum_cells < myList.row[i].trip.length*2 + 2)
@@ -648,6 +711,8 @@
 							document.getElementById("data1").innerHTML ="";
 							document.getElementById("data2").innerHTML ="";
 							document.getElementById("data3").innerHTML ="";
+							document.getElementById("data4").innerHTML ="";
+							document.getElementById("data5").innerHTML ="";
 						}
 						else
 						{
@@ -677,6 +742,9 @@
 					min=myList.row[thisrow].trip[thiscel].end_time % 100;
 					timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
 					document.getElementById("data3").innerHTML = timestring;
+					//station data
+					document.getElementById("data4").innerHTML = myList.row[thisrow].trip[thiscel].from_sta;
+					document.getElementById("data5").innerHTML = myList.row[thisrow].trip[thiscel].to_sta;
 				};
 			}
 			//every(in range) cell's events
@@ -802,7 +870,8 @@
 			hr=Math.floor(Trip.end_time / 100);
 			min=Trip.end_time % 100;
 			timestring_end= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min;
-			pool.rows[i].cells[j].innerText = Trip.line_name + " \n(" + timestring_sta + "-" + timestring_end + ")";
+			pool.rows[i].cells[j].innerText = Trip.line_name + " \n(" + timestring_sta + "-" + timestring_end + ")" ;
+			pool.rows[i].cells[j].innerText += "\n" + Trip.from_sta + "->" + Trip.to_sta;
 
 			pool.rows[i].cells[j].draggable=true;
 			//events
@@ -854,6 +923,8 @@
 						document.getElementById("data1").innerHTML ="";
 						document.getElementById("data2").innerHTML ="";
 						document.getElementById("data3").innerHTML ="";
+						document.getElementById("data4").innerHTML ="";
+						document.getElementById("data5").innerHTML ="";
 					}
 					else
 					{
@@ -882,7 +953,6 @@
 					isread_pool = true;
 				}
 				document.getElementById("data1").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].line_name;
-				
 				//timedata
 				var hr,min;
 				var timestring;
@@ -897,6 +967,9 @@
 				min=poolList.trip[row_pool*trips_per_row +cell_pool].end_time % 100;
 				timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
 				document.getElementById("data3").innerHTML = timestring;
+				//station data
+				document.getElementById("data4").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].from_sta;
+				document.getElementById("data5").innerHTML = poolList.trip[row_pool*trips_per_row +cell_pool].to_sta;
 			};
 		}
 	    }
