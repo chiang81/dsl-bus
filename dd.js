@@ -14,6 +14,36 @@
     document.getElementById("timebox").innerHTML = year + month + day;
     */
 
+    //add combobox time
+    var combobox=document.getElementById("empty_start_hr");
+    for(var i=0; i < 24 ; i++)
+    {
+	    var new_opt=document.createElement("option");
+	    new_opt.text = i;
+	    combobox.add(new_opt);
+    }
+    var combobox=document.getElementById("empty_start_min");
+    for(var i=0; i < 60 ; i++)
+    {
+	    var new_opt=document.createElement("option");
+	    new_opt.text = i;
+	    combobox.add(new_opt);
+    }
+    var combobox=document.getElementById("empty_end_hr");
+    for(var i=0; i < 24 ; i++)
+    {
+	    var new_opt=document.createElement("option");
+	    new_opt.text = i;
+	    combobox.add(new_opt);
+    }
+    var combobox=document.getElementById("empty_end_min");
+    for(var i=0; i < 60 ; i++)
+    {
+	    var new_opt=document.createElement("option");
+	    new_opt.text = i;
+	    combobox.add(new_opt);
+    }
+
     //JSON table
     var myList = {
 	"row": [{
@@ -22,25 +52,25 @@
 		"start_time": 600,
 		"end_time": 740,
 		"from_sta": "TN",
-		"to_sta": "LD"
+		"to_sta": "NZ"
 	    }, {
 		"line_name": "R3_15",
 		"start_time": 815,
 		"end_time": 1018,
-		"from_sta": "LD",
+		"from_sta": "NZ",
 		"to_sta": "KS"
 	    }, {
 		"line_name": "12_18",
 		"start_time": 1105,
 		"end_time": 1115,
 		"from_sta": "KS",
-		"to_sta": "ZI"
+		"to_sta": "GS"
 	    }, {
 		"line_name": "12_24",
 		"start_time": 1435,
 		"end_time": 1535,
-		"from_sta": "ZI",
-		"to_sta": "GS"
+		"from_sta": "GS",
+		"to_sta": "ZI"
 	    }]
 	}, {
 	    "trip": [{
@@ -48,25 +78,25 @@
 		"start_time": 545,
 		"end_time": 715,
 		"from_sta": "TN",
-		"to_sta": "LD"
+		"to_sta": "GS"
 	    }, {
 		"line_name": "12_9",
 		"start_time": 740,
 		"end_time": 940,
-		"from_sta": "LD",
-		"to_sta": "CT"
+		"from_sta": "GS",
+		"to_sta": "KS"
 	    }, {
 		"line_name": "12_16",
 		"start_time": 1015,
 		"end_time": 1215,
-		"from_sta": "CT",
+		"from_sta": "KS",
 		"to_sta": "NZ"
 	    }, {
 		"line_name": "12_22",
 		"start_time": 1245,
 		"end_time": 1445,
 		"from_sta": "NZ",
-		"to_sta": "LD"
+		"to_sta": "CC"
 	    }]
 	}, {
 	    "trip": [{
@@ -98,12 +128,12 @@
 		"start_time": 1720,
 		"end_time": 1810,
 		"from_sta": "TN",
-		"to_sta": "LZ"
+		"to_sta": "GS"
 	    }, {
 		"line_name": "DLP_7",
 		"start_time": 1810,
 		"end_time": 1900,
-		"from_sta": "LZ",
+		"from_sta": "GS",
 		"to_sta": "KS"
 	    }]
 	}, {
@@ -138,12 +168,12 @@
 		"start_time": 835,
 		"end_time": 905,
 		"from_sta": "GS",
-		"to_sta": "LD"
+		"to_sta": "CC"
 	    }, {
 		"line_name": "12_15",
 		"start_time": 950,
 		"end_time": 1150,
-		"from_sta": "LD",
+		"from_sta": "CC",
 		"to_sta": "TN"
 	    }, {
 		"line_name": "12_21",
@@ -194,17 +224,24 @@
     var isread_pool = false;
     var row_read_tb, cell_read_tb, color_read_tb;
     var row_read_pool, cell_read_pool, color_read_pool;
+    //use to alldrag
+    var isalldrag = false;
+    var cell_start, cell_end;
 
     display_table();
     display_pool();
 
     //definition of functions
     function store(Cell,i) {
-	//A->TEMP
-	row_of_temp = Cell.parentNode.rowIndex;	//table index
-	cell_of_temp = Cell.cellIndex; 		//table index
-	color_of_temp = Cell.style.backgroundColor;
-
+	if(!isalldrag)	//'alldrag' not start
+	{
+		//A->TEMP
+		row_of_temp = Cell.parentNode.rowIndex;	//table index
+		cell_of_temp = Cell.cellIndex; 		//table index
+		color_of_temp = Cell.style.backgroundColor;
+	}
+	else
+		row_of_temp = Cell.parentNode.rowIndex;	//table index
 	table_mark = i;
     }
 
@@ -222,74 +259,125 @@
 	if(table_mark==0)	//cell from table
 	{
 		new_cell_of_temp = (cell_of_temp-3)/2;
-		if(new_cell_of_temp==0)
+		if(isalldrag)
 		{
-		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
-		    oldCell_pre = {"end_time": 0};
-		    oldCell_pre.to_sta = thisCell.from_sta;
-		    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
-		}
-		else if (new_cell_of_temp==myList.row[new_row_of_temp].trip.length-1)
-		{
-		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
-		    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
-		    oldCell_next = {"start_time": 9999};
-		    oldCell_next.from_sta = thisCell.to_sta;
+			var new_cell_start=(cell_start-3)/2;	//json index
+			var new_cell_end=(cell_end-3)/2;	//json index
+			if(new_cell_start==0)
+			{
+			    oldCell = {
+				    "start_time": myList.row[new_row_of_temp].trip[new_cell_start].start_time,
+				    "end_time": myList.row[new_row_of_temp].trip[new_cell_end].end_time,
+				    "from_sta": myList.row[new_row_of_temp].trip[new_cell_start].from_sta,
+				    "to_sta": myList.row[new_row_of_temp].trip[new_cell_end].to_sta
+			    };
+
+			    oldCell_pre = {"end_time": 0};
+			    oldCell_pre.to_sta = thisCell.from_sta;
+
+			    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_end+1];
+			}
+			else if (new_cell_end==myList.row[new_row_of_temp].trip.length-1)
+			{
+			    oldCell = {
+				    "start_time": myList.row[new_row_of_temp].trip[new_cell_start].start_time,
+				    "end_time": myList.row[new_row_of_temp].trip[new_cell_end].end_time,
+				    "from_sta": myList.row[new_row_of_temp].trip[new_cell_start].from_sta,
+				    "to_sta": myList.row[new_row_of_temp].trip[new_cell_end].to_sta
+			    };
+
+			    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_start-1];
+
+			    oldCell_next = {"start_time": 9999};
+			    oldCell_next.from_sta = thisCell.to_sta;
+			}
+			else
+			{
+			    oldCell = {
+				    "start_time": myList.row[new_row_of_temp].trip[new_cell_start].start_time,
+				    "end_time": myList.row[new_row_of_temp].trip[new_cell_end].end_time,
+				    "from_sta": myList.row[new_row_of_temp].trip[new_cell_start].from_sta,
+				    "to_sta": myList.row[new_row_of_temp].trip[new_cell_end].to_sta
+			    };
+
+			    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_start-1];
+
+			    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_end+1];
+			}
 		}
 		else
 		{
-		    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
-		    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
-		    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
+			if(new_cell_of_temp==0)
+			{
+			    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
+			    oldCell_pre = {"end_time": 0};
+			    oldCell_pre.to_sta = thisCell.from_sta;
+			    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
+			}
+			else if (new_cell_of_temp==myList.row[new_row_of_temp].trip.length-1)
+			{
+			    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
+			    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
+			    oldCell_next = {"start_time": 9999};
+			    oldCell_next.from_sta = thisCell.to_sta;
+			}
+			else
+			{
+			    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
+			    oldCell_pre = myList.row[new_row_of_temp].trip[new_cell_of_temp-1];
+			    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_of_temp+1];
+			}
 		}
 	}
 	else if(table_mark==1)	//cell from pool
 	{
 		oldCell = poolList.trip[row_of_temp*trips_per_row +cell_of_temp];
 		oldCell_pre = {"end_time": 0};
+		oldCell_pre.to_sta = thisCell.from_sta;
 		oldCell_next = {"start_time": 9999};
+		oldCell_next.from_sta = thisCell.to_sta;
 	}
 
 	if(new_col==0)
 	{
-	    //thisCell = myList.row[new_row].trip[new_col];
-	    thisCell_pre = {"end_time": 0};
-	    thisCell_pre.to_sta = oldCell.from_sta;
+		//thisCell = myList.row[new_row].trip[new_col];
+		thisCell_pre = {"end_time": 0};
+		thisCell_pre.to_sta = oldCell.from_sta;
 
-	    thisCell_next = myList.row[new_row].trip[new_col+1];
+		thisCell_next = myList.row[new_row].trip[new_col+1];
 	}
 	else if (new_col==myList.row[new_row].trip.length-1)
 	{
-	    //thisCell = myList.row[new_row].trip[new_col];
-	    thisCell_pre = myList.row[new_row].trip[new_col-1];
+		//thisCell = myList.row[new_row].trip[new_col];
+		thisCell_pre = myList.row[new_row].trip[new_col-1];
 	    
-	    thisCell_next = {"start_time": 9999};
-	    thisCell_next.from_sta = oldCell.to_sta;
+		thisCell_next = {"start_time": 9999};
+		thisCell_next.from_sta = oldCell.to_sta;
 	}
 	else
 	{
-	    //thisCell = myList.row[new_row].trip[new_col];
-	    thisCell_pre = myList.row[new_row].trip[new_col-1];
-	    thisCell_next = myList.row[new_row].trip[new_col+1];
+		//thisCell = myList.row[new_row].trip[new_col];
+		thisCell_pre = myList.row[new_row].trip[new_col-1];
+		thisCell_next = myList.row[new_row].trip[new_col+1];
 	}
 
 	//examine oldCell origin position time
 	if (thisCell.start_time < oldCell_pre.end_time)
 	{
-	    return -1;
+		return -1;
 	}
 	if (thisCell.end_time > oldCell_next.start_time)
 	{
-	    return -1;
+		return -1;
 	}
 	//examine thisCell origin position time
 	if (oldCell.start_time < thisCell_pre.end_time)
 	{
-	    return -1;
+		return -1;
 	}
 	if (oldCell.end_time > thisCell_next.start_time)
 	{
-	    return -1;
+		return -1;
 	}
 	//examine O/D station
 	if((thisCell.from_sta != oldCell_pre.to_sta) || (thisCell.to_sta != oldCell_next.from_sta))
@@ -313,7 +401,19 @@
 	
 	if(table_mark==0)	//cell from table
 	{
-		oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
+		if(isalldrag)
+		{
+			var new_cell_start=(cell_start-3)/2;	//json index
+			var new_cell_end=(cell_end-3)/2;	//json index
+			oldCell = {
+				"start_time": myList.row[new_row_of_temp].trip[new_cell_start].start_time,
+				"end_time": myList.row[new_row_of_temp].trip[new_cell_end].end_time,
+				"from_sta": myList.row[new_row_of_temp].trip[new_cell_start].from_sta,
+				"to_sta": myList.row[new_row_of_temp].trip[new_cell_end].to_sta
+			};
+		}
+		else
+			oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
 	}
 	else if(table_mark==1)	//cell from pool
 	{
@@ -359,31 +459,57 @@
 	}
 	return 0;
     }
-    function exchange(row, col) {
-	//alert(row_of_temp+","+cell_of_temp);
-	//alert(row+","+col);
-	if(table_mark==0)	//cell from table
-		var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
-	else if(table_mark==1)	//cell from pool
-		var oldCell = poolList.trip[row_of_temp*trips_per_row +cell_of_temp];
+    function exchange(row, col)
+    {
+	if(isalldrag)
+	{
+		var thisCell = myList.row[row-1].trip[(col-3)/2];
+		var temp;
+		//this->TEMP
+		temp=thisCell;
 
-	var thisCell = myList.row[row-1].trip[(col-3)/2];
-	var temp;
+		//old->this
+		//del this
+		myList.row[row-1].trip.splice((col-3)/2,1);
+		var new_cell_start=(cell_start-3)/2;	//json index
+		var new_cell_end=(cell_end-3)/2;	//json index
+		for(var i=0; i <= (new_cell_end-new_cell_start); i++)
+		{
+			var X=myList.row[row_of_temp-1].trip[new_cell_start];
+			//delete 1 obj from new_cell_start
+			myList.row[row_of_temp-1].trip.splice(new_cell_start,1);
+			//add obj before '(col-3)/2 + j'
+			myList.row[row-1].trip.splice((col-3)/2 + i,0,X);
+		}
+		
+		//TEMP->old
+		//add temp before 'new_cell_start'
+		myList.row[row_of_temp-1].trip.splice(new_cell_start,0,temp);
+	}
+	else
+	{
+		if(table_mark==0)	//cell from table
+			var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
+		else if(table_mark==1)	//cell from pool
+			var oldCell = poolList.trip[row_of_temp*trips_per_row +cell_of_temp];
 
-	//old->TEMP
-	temp = oldCell;
-	//this->old
-	oldCell = thisCell;
-	//TEMP->this
-	thisCell = temp;
+		var thisCell = myList.row[row-1].trip[(col-3)/2];
+		var temp;
 
-	//reverse input
-	if(table_mark==0)	//cell from table
-		myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2] = oldCell; //json index
-	else if(table_mark==1)	//cell from pool
-		poolList.trip[row_of_temp*trips_per_row +cell_of_temp] = oldCell;
-	myList.row[row-1].trip[(col-3)/2] = thisCell;
+		//old->TEMP
+		temp = oldCell;
+		//this->old
+		oldCell = thisCell;
+		//TEMP->this
+		thisCell = temp;
 
+		//reverse input
+		if(table_mark==0)	//cell from table
+			myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2] = oldCell; //json index
+		else if(table_mark==1)	//cell from pool
+			poolList.trip[row_of_temp*trips_per_row +cell_of_temp] = oldCell;
+		myList.row[row-1].trip[(col-3)/2] = thisCell;
+	}
 	//alert("Exchange Finished!");
     }
     function insert(row,col,topool) { //topool=0: insert into table, topool=1: insert into pool
@@ -392,20 +518,51 @@
 	{
 		if(topool==0)
 		{
-			var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
-			//add obj after 'col/2-1'
-			myList.row[row-1].trip.splice(col/2-1,0,oldCell);
-			//delete obj (delete 1 obj from cell_of_temp/2-1)
-			myList.row[row_of_temp-1].trip.splice((cell_of_temp-3)/2,1);
+			if(isalldrag)
+			{
+				var new_cell_start=(cell_start-3)/2;	//json index
+				var new_cell_end=(cell_end-3)/2;	//json index
+				for(var i=0; i <= (new_cell_end-new_cell_start); i++)
+				{
+					var X=myList.row[row_of_temp-1].trip[new_cell_start];
+					//delete 1 obj from new_cell_start
+					myList.row[row_of_temp-1].trip.splice(new_cell_start,1);
+					//add obj at 'col/2-1 + j'
+					myList.row[row-1].trip.splice(col/2-1 + i,0,X);
+				}
+			}
+			else
+			{
+				var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
+				//add obj after 'col/2-1'
+				myList.row[row-1].trip.splice(col/2-1,0,oldCell);
+				//delete obj (delete 1 obj from (cell_of_temp-3)/2)
+				myList.row[row_of_temp-1].trip.splice((cell_of_temp-3)/2,1);
+			}
 		}
 		else if(topool==1)
 		{
-			var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
-			//poolList.trip[i*trips_per_row+j];
-			//add obj after 'row*trips_per_row+col'
-			poolList.trip.splice(row*trips_per_row+col,0,oldCell);
-			//delete obj (delete 1 obj from cell_of_temp/2-1)
-			myList.row[row_of_temp-1].trip.splice((cell_of_temp-3)/2,1);
+			if(isalldrag)
+			{
+				var new_cell_start=(cell_start-3)/2;	//json index
+				var new_cell_end=(cell_end-3)/2;	//json index
+				for(var i=0; i <= (new_cell_end-new_cell_start); i++)
+				{
+					var X=myList.row[row_of_temp-1].trip[new_cell_start];
+					//delete 1 obj from new_cell_start
+					myList.row[row_of_temp-1].trip.splice(new_cell_start,1);
+					//add obj at 'row*trips_per_row+col + i'
+					poolList.trip.splice(row*trips_per_row+col + i,0,X);
+				}
+			}
+			else
+			{
+				var oldCell = myList.row[row_of_temp-1].trip[(cell_of_temp-3)/2]; //json index
+				//add obj after 'row*trips_per_row+col'
+				poolList.trip.splice(row*trips_per_row+col,0,oldCell);
+				//delete obj (delete 1 obj from (cell_of_temp-3)/2)
+				myList.row[row_of_temp-1].trip.splice((cell_of_temp-3)/2,1);
+			}
 		}
 	}
 	else if(table_mark==1)	//oldcell from pool
@@ -467,6 +624,39 @@
 
 	document.getElementById("btn_new").onclick= function(){
 	    add_row();
+	};
+	document.getElementById("empty_new").onclick= function(){
+	    //var new_trip={"start_time": 0000,"end_time": 0000};
+	    var new_trip={};
+
+	    var ele=document.getElementById("empty_start_hr");
+	    new_trip.start_time	= ele.options[ele.selectedIndex].text * 100;
+	    var ele=document.getElementById("empty_start_min");
+	    new_trip.start_time	+=ele.options[ele.selectedIndex].text * 1;
+	    var ele=document.getElementById("empty_end_hr");
+	    new_trip.end_time	= ele.options[ele.selectedIndex].text * 100;
+	    var ele=document.getElementById("empty_end_min");
+	    new_trip.end_time	+=ele.options[ele.selectedIndex].text * 1;
+
+	    var ele=document.getElementById("empty_O");
+	    new_trip.from_sta	=ele.options[ele.selectedIndex].text;
+	    var ele=document.getElementById("empty_D");
+	    new_trip.to_sta	=ele.options[ele.selectedIndex].text;
+	    //examine
+	    if(new_trip.start_time >= new_trip.end_time || new_trip.from_sta==new_trip.to_sta)
+	    {
+		    alert("Create failed!");
+		    return;
+	    }
+	    new_trip.line_name	="Dummy";
+
+	    //add 'new_trip' after 'poolList.trip.length'
+	    poolList.trip.splice( poolList.trip.length, 0, new_trip);
+
+	    //refresh pool
+	    for(var q=pool.rows.length-1;q>=0;q--)
+		    pool.deleteRow(q);
+	    display_pool();
 	};
 
 	//JSON table build
@@ -532,6 +722,26 @@
 		table.rows[i].insertCell(k+1);
 		table.rows[i].cells[k+1].align="center";
 		table.rows[i].cells[k+1].style.padding="5px";
+		if(Trip.line_name == "Dummy")
+		{
+			table.rows[i].cells[k+1].style.fontStyle="italic";
+			table.rows[i].cells[k+1].ondblclick = function(){
+				var dblc=confirm("是否要刪除？");
+				if(dblc)
+				{
+					var row  = this.parentNode.rowIndex-1;	//json index
+					var cell = (this.cellIndex - 3)/2;	//json index
+					//delete obj (delete 1 obj from cell)
+					myList.row[row].trip.splice(cell,1);
+
+					//refresh table
+					for(var q=table.rows.length-1;q>=0;q--)
+						table.deleteRow(q);
+					display_table();
+				}
+			}
+		}
+
 		var timestring_sta, timestring_end;
 		var hr,min;
 		hr=Math.floor(Trip.start_time / 100);
@@ -557,7 +767,10 @@
 			var hr=Math.floor(myList.row[i].trip[j+1].start_time / 100) - Math.floor(myList.row[i].trip[j].end_time / 100);
 			var min=(myList.row[i].trip[j+1].start_time % 100) - (myList.row[i].trip[j].end_time % 100);
 			if( (hr*60 + min) > 60)
+			{
+				table.rows[i].cells[j*2+4].style.backgroundColor = "#B0C4DE";
 				over_1hr[i]++;
+			}
 		}
 		allover_1hr += over_1hr[i];
 	}
@@ -636,13 +849,21 @@
 		if(myList.row[i].trip.length > 0)
 			num_drivers++;
 	//工作時間檢查
-	for (var i = 0; i < myList.row.length; i++)
+	for (var i = 0, j; i < myList.row.length; i++)
 	{
 		if(totwork[i] > 900)
 		{
-			 for (j = 0; j < table.rows[i].cells.length; j++)
+			 for (j = 0; j < table.rows[i+1].cells.length; j++)
 			 {
-				 table.rows[i].cells[j].style.backgroundColor = "#FFFF00";
+				 table.rows[i+1].cells[j].style.backgroundColor = "#FFFF00";
+			 }
+			 for (j = 0; j < myList.row[i].trip.length-1; j++)//recolor
+			 {
+				//myList.row[i].trip[j+1].start_time - myList.row[i].trip[j].end_time > 60 ?
+				var hr=Math.floor(myList.row[i].trip[j+1].start_time / 100) - Math.floor(myList.row[i].trip[j].end_time / 100);
+				var min=(myList.row[i].trip[j+1].start_time % 100) - (myList.row[i].trip[j].end_time % 100);
+				if( (hr*60 + min) > 60)
+					table.rows[i+1].cells[j*2+4].style.backgroundColor = "#B0C4DE";
 			 }
 		}
 	}
@@ -655,7 +876,20 @@
 
 	//事件設定
 	if (table != null) {
-		//標頭列無事件
+		//標頭列事件-群體拖曳
+		for (var i = 1; i < table.rows.length; i++)
+		{
+			table.rows[i].cells[0].onclick =function(){
+				//start 'alldrag'
+				if((isread_tb && !isread_pool) && (row_read_tb==this.parentNode.rowIndex))
+				{
+					isalldrag = true;
+					//change header color
+					table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = "#FDB03B";
+				}
+			}
+		}
+		//內格事件
 		for (var i = 1; i < table.rows.length; i++)
 		{
 			//data cells are draggable
@@ -664,7 +898,6 @@
 				var j = k*2 + 3;	//table index
 				table.rows[i].cells[j].draggable=true;
 				table.rows[i].cells[j].ondragstart = function(event){
-					//document.getElementById("demo1").innerHTML = this.parentNode.rowIndex +","+ this.cellIndex;
 					store(this,0);
 					this.style.backgroundColor = "#FDB03B";
 
@@ -672,79 +905,104 @@
 					row_of_under	= this.parentNode.rowIndex;
 					cell_of_under	= this.cellIndex;
 					color_of_under	= this.style.backgroundColor;
-					 
+					
 					event.dataTransfer.setData("Text", event.target.id);
 				};
 				table.rows[i].cells[j].onclick =function(){
-					//alert(this.parentNode.rowIndex +","+ this.cellIndex);
-					//read data color change
-					if(!isread_tb && !isread_pool)
+					if(isalldrag)	//'alldrag' is start
 					{
-						row_read_tb  = this.parentNode.rowIndex;
-						cell_read_tb = this.cellIndex;
-    						color_read_tb= this.style.backgroundColor;
-						table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
-						isread_tb = true;
-					}
-					else if(!isread_tb && isread_pool)
-					{
-						//close pool color-change
-						pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = color_read_pool;
-						pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#000000";
-						isread_pool = false;
-
-						//open table color-change
-						row_read_tb  = this.parentNode.rowIndex;
-						cell_read_tb = this.cellIndex;
-    						color_read_tb= this.style.backgroundColor;
-						table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
-						isread_tb = true;
-					}
-					else if(isread_tb && !isread_pool)
-					{
-						if((row_read_tb == this.parentNode.rowIndex) && (cell_read_tb == this.cellIndex))
-						//reclick the same cell
+						if(row_read_tb==this.parentNode.rowIndex)	//in the same row
 						{
-							table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = color_read_tb;
-							isread_tb = false;
-							remove_data();
-							document.getElementById("data1").innerHTML ="";
-							document.getElementById("data2").innerHTML ="";
-							document.getElementById("data3").innerHTML ="";
-							document.getElementById("data4").innerHTML ="";
-							document.getElementById("data5").innerHTML ="";
+							cell_start = (cell_read_tb<=this.cellIndex)? cell_read_tb : this.cellIndex ;	//table index
+							cell_end = (cell_read_tb<=this.cellIndex)? this.cellIndex : cell_read_tb ;	//table index
+							//change these cells color
+							for(var l=cell_start; l <= cell_end; l+=2)
+								table.rows[row_read_tb].cells[l].style.backgroundColor = "#FDB03B";
 						}
 						else
+							isalldrag = false;
+					}
+					else
+					{
+						//read data color change
+						if(!isread_tb && !isread_pool)
 						{
-							table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = color_read_tb;
 							row_read_tb  = this.parentNode.rowIndex;
 							cell_read_tb = this.cellIndex;
     							color_read_tb= this.style.backgroundColor;
 							table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
 							isread_tb = true;
 						}
-					}
+						else if(!isread_tb && isread_pool)
+						{
+							//close pool color-change
+							pool.rows[row_read_pool].cells[cell_read_pool].style.backgroundColor = color_read_pool;
+							pool.rows[row_read_pool].cells[cell_read_pool].style.color = "#000000";
+							isread_pool = false;
 
-					var thisrow = this.parentNode.rowIndex-1;	//JSON index
-					var thiscel = (this.cellIndex-3)/2;		//JSON index
-					document.getElementById("data1").innerHTML = myList.row[thisrow].trip[thiscel].line_name;
-					//timedata
-					var hr,min;
-					var timestring;
-					//start time
-					hr=Math.floor(myList.row[thisrow].trip[thiscel].start_time / 100);
-					min=myList.row[thisrow].trip[thiscel].start_time % 100;
-					timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
-					document.getElementById("data2").innerHTML = timestring;
-					timestring="";
-					//end time
-					hr=Math.floor(myList.row[thisrow].trip[thiscel].end_time / 100);
-					min=myList.row[thisrow].trip[thiscel].end_time % 100;
-					timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
-					document.getElementById("data3").innerHTML = timestring;
-					//station data
-					document.getElementById("data4").innerHTML = myList.row[thisrow].trip[thiscel].from_sta;
-					document.getElementById("data5").innerHTML = myList.row[thisrow].trip[thiscel].to_sta;
+							//open table color-change
+							row_read_tb  = this.parentNode.rowIndex;
+							cell_read_tb = this.cellIndex;
+    							color_read_tb= this.style.backgroundColor;
+							table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
+							isread_tb = true;
+						}
+						else if(isread_tb && !isread_pool)
+						{
+							if((row_read_tb == this.parentNode.rowIndex) && (cell_read_tb == this.cellIndex))
+							//reclick the same cell
+							{
+								table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = color_read_tb;
+								isread_tb = false;
+								document.getElementById("data1").innerHTML ="";
+								document.getElementById("data2").innerHTML ="";
+								document.getElementById("data3").innerHTML ="";
+								document.getElementById("data4").innerHTML ="";
+								document.getElementById("data5").innerHTML ="";
+							}
+							else
+							{
+								table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = color_read_tb;
+								row_read_tb  = this.parentNode.rowIndex;
+								cell_read_tb = this.cellIndex;
+    								color_read_tb= this.style.backgroundColor;
+								table.rows[row_read_tb].cells[cell_read_tb].style.backgroundColor = "#FDB03B";
+								isread_tb = true;
+							}
+						}
+
+						var thisrow = this.parentNode.rowIndex-1;	//JSON index
+						var thiscel = (this.cellIndex-3)/2;		//JSON index
+						document.getElementById("data1").innerHTML = myList.row[thisrow].trip[thiscel].line_name;
+						//timedata
+						var hr,min;
+						var timestring;
+						//start time
+						hr=Math.floor(myList.row[thisrow].trip[thiscel].start_time / 100);
+						min=myList.row[thisrow].trip[thiscel].start_time % 100;
+						timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
+						document.getElementById("data2").innerHTML = timestring;
+						timestring="";
+						//end time
+						hr=Math.floor(myList.row[thisrow].trip[thiscel].end_time / 100);
+						min=myList.row[thisrow].trip[thiscel].end_time % 100;
+						timestring= ((hr<10)?"0":"") + hr + ":" + ((min<10)?"0":"") + min ;
+						document.getElementById("data3").innerHTML = timestring;
+						//station data
+						document.getElementById("data4").innerHTML = myList.row[thisrow].trip[thiscel].from_sta;
+						document.getElementById("data5").innerHTML = myList.row[thisrow].trip[thiscel].to_sta;
+					}
+				};
+				table.rows[i].cells[j].ondragend = function(event){
+					isalldrag = false;
+					//refresh table
+					for(var q=table.rows.length-1;q>=0;q--)
+						table.deleteRow(q);
+					display_table();
+					//refresh pool
+					for(var q=pool.rows.length-1;q>=0;q--)
+						pool.deleteRow(q);
+					display_pool();
 				};
 			}
 			//every(in range) cell's events
@@ -786,16 +1044,6 @@
 					//document.getElementById("demo2").innerHTML = row_of_under +"-"+ cell_of_under;
 					event.preventDefault();
 				};
-				table.rows[i].cells[j].ondragend = function(event){
-					//refresh table
-					for(var q=table.rows.length-1;q>=0;q--)
-						table.deleteRow(q);
-					display_table();
-					//refresh pool
-					for(var q=pool.rows.length-1;q>=0;q--)
-						pool.deleteRow(q);
-					display_pool();
-				};
 				table.rows[i].cells[j].ondrop =function(event){
 					event.preventDefault();
 					//document.getElementById("demo3").innerHTML = this.parentNode.rowIndex +"."+ this.cellIndex;
@@ -827,7 +1075,7 @@
 						table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
 					else if(table_mark==1)
 						pool.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
-					table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = color_of_under;
+					//table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = color_of_under;
 					/*//refresh table
 					for(var q=table.rows.length-1;q>=0;q--)
 						table.deleteRow(q);
@@ -862,6 +1110,26 @@
 		if(Trip)
 		{
 			pool.rows[i].cells[j].align="center";
+			if(Trip.line_name == "Dummy")
+			{
+				pool.rows[i].cells[j].style.fontStyle="italic";
+				pool.rows[i].cells[j].ondblclick = function(){
+					var dblc=confirm("是否要刪除？");
+					if(dblc)
+					{
+						var row  = this.parentNode.rowIndex;
+						var cell = this.cellIndex;
+						//alert(row+","+cell);
+						//delete obj (delete 1 obj from 'row*trips_per_row +cell')
+						poolList.trip.splice( row*trips_per_row +cell ,1);
+
+						//refresh pool
+						for(var q=pool.rows.length-1;q>=0;q--)
+							pool.deleteRow(q);
+						display_pool();
+					}
+				}
+			}
 			var timestring_sta, timestring_end;
 			var hr,min;
 			hr=Math.floor(Trip.start_time / 100);

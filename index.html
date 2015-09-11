@@ -117,11 +117,38 @@ table{
 }
 #tpool{
 	border:#22B573 4px solid; 
-	margin-bottom: 5%;
+	margin-bottom: 2%;
 }
 #tpool td{
 	border:#22B573 2px solid;
 	color: #000000;
+}
+
+#emptydata{
+	border:#CCCC4D 4px solid; 
+	margin-bottom: 5%;
+}
+#emptydata td{
+	width: 30%;
+	height: 50px;
+	font-size:16pt;
+	text-align:center;
+	padding: 0px;
+}
+select{
+	font-size:12pt;
+}
+#empty_new{
+	font-family:Microsoft JhengHei;
+	border:#CCCC4D 0px solid;
+	font-size:18pt;
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+}
+#empty_new:hover{
+	background-color: #CCCC4D;
+	color: #FFFFFF;
 }
 </style>
 
@@ -175,6 +202,66 @@ table{
 <p4 id="title_lebel">未排入車次</p4>
 </div>
 <table align="center" id="tpool" border="2" cellspacing="0" > </table>
+
+<table align="center" id="emptydata" border="2" cellspacing="0">
+	<tr>
+		<td>
+			車次起點<!--<input type="text" id="empty_O" list="O_range">-->
+				<select id="empty_O">
+					<option> TN
+					<option> CC
+					<option> GS
+					<option> NZ
+					<option> ZI
+					<option> KS
+				</select  >
+		</td>
+
+		<td>
+			車次終點<!--<input type="text" id="empty_D" list="D_range">-->
+				<select id="empty_D">
+					<option> TN
+					<option> CC
+					<option> GS
+					<option> NZ
+					<option> ZI
+					<option> KS
+				</select>
+		</td>
+
+		<td></td>
+	</tr>
+
+	<tr>
+		<td>
+			起始時間
+			<!--<input type="text" id="empty_start_hr" list="hr_range">-->
+				<select id="empty_start_hr">
+					
+				</select>
+				:
+				<select id="empty_start_min">
+					
+				</select>
+		</td>
+
+		<td>
+			結束時間
+			<!--<input type="text" id="empty_end_hr" list="hr_range">-->
+				<select id="empty_end_hr">
+					
+				</select>
+				:
+				<select id="empty_end_min">
+					
+				</select>
+		</td>
+
+		<td>
+			<input type="button" value="新增" id="empty_new">
+		</td>
+	</tr>
+</table>
 
 </body>
 </html>
