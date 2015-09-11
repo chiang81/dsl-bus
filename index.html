@@ -8,7 +8,6 @@
 google.load("jquery", "1.3");</script>
 <script type="text/javascript" src="dd.js"></script>
 <style>
-
 body{
 	font-family:Microsoft JhengHei;
 	background-image:url("background.png");
@@ -24,6 +23,8 @@ table{
 	border-collapse: collapse;
 	width: 90%;
 }
+
+/*all info.*/
 #all_info{
 	border:#C1272D 4px solid; 
 	margin-top:  2%;
@@ -45,7 +46,7 @@ table{
 	font-size:18pt;
 }
 
-
+/*center button*/
 #ctrl_area{
 	margin:0px auto;
 	margin-top:  2.5%;
@@ -57,9 +58,7 @@ table{
 	font-family:Microsoft JhengHei;
 	width: 18%;
 	height: 50px;
-	border-width:2px;
-	border-style:solid;
-	border-color: #0071BC;
+	border:#0071BC 2px solid;
 	background-color: #FFFFFF;
 }
 .btn button{
@@ -77,44 +76,42 @@ table{
 	color: #FFFFFF;
 }
 
+/*table titles*/
+.titles{
+	width: 54%;
+	height: 50px;
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top:  2.5%;
+	font-weight:bold;
+	font-size:12pt;
+	text-align:center;
+	line-height:50px;
+}
+.lebels{
+	font-size:18pt;
+	color: #FFFFFF;
+	height: 50px;
+}
+#table_title{
+	background-color: #FDB03B;
+}
+#pool_title{
+	background-color: #22B573;
+}
+#empty_title{
+	background-color: #CCCC4D;
+}
+
+/*trips table*/
 #table1{
-	border:#FDB03B 4px solid; 
+	border:#FDB03B 4px solid;
 }
 #table1 td{
 	border:#FDB03B 2px solid;
 }
-#table_title{
-	width: 54%;
-	height: 50px;
-	margin-right: 5%;
-	margin-left: auto;
-	background-color: #FDB03B;
-	font-weight:bold;
-	font-size:12pt;
-	text-align:center;
-	line-height:50px;
-}
-#table_lebel{
-	font-size:18pt;
-	color: #FFFFFF;
-	height: 50px;
-}
 
-#pool_title{
-	margin-left: 5%;
-	background-color: #22B573;
-	font-weight:bold;
-	font-size:12pt;
-	width: 54%;
-	height: 50px;
-	text-align:center;
-	line-height:50px;
-}
-#title_lebel{
-	font-size:18pt;
-	color: #FFFFFF;
-	height: 50px;
-}
+/*pool table*/
 #tpool{
 	border:#22B573 4px solid; 
 	margin-bottom: 2%;
@@ -124,24 +121,34 @@ table{
 	color: #000000;
 }
 
+/*empty table*/
 #emptydata{
-	border:#CCCC4D 4px solid; 
+	border-left  :#CCCC4D 4px solid;
 	margin-bottom: 5%;
+	width: 90%;
+}
+#btn_site{
+	background-color: none;
+	padding-left:10px; 
 }
 #emptydata td{
 	width: 30%;
 	height: 50px;
 	font-size:16pt;
 	text-align:center;
-	padding: 0px;
 }
+.other_td{
+	border:#CCCC4D 2px solid;
+}
+
 select{
 	font-size:12pt;
 }
 #empty_new{
 	font-family:Microsoft JhengHei;
-	border:#CCCC4D 0px solid;
+	border:#CCCC4D 4px solid;
 	font-size:18pt;
+	left: 5px; 
 	width: 100%;
 	height: 100%;
 	background-color: #FFFFFF;
@@ -189,76 +196,61 @@ select{
 </tr>
 </table>
 
-<table align="center" id="table1" border="2" cellspacing="0" > </table>
-<div id="table_title">
-<p3 id="table_lebel">任務清單</p3>
+<div class="titles" id="table_title">
+<p2 class="lebels" id="table_lebel">任務清單</p2>
 </div>
+<table align="center" id="table1" border="2" cellspacing="0" > </table>
 
 <div id="ctrl_area">
 <input type="button" value="新增司機" id="btn_new">
 </div>
 
-<div id="pool_title">
-<p4 id="title_lebel">未排入車次</p4>
+<div class="titles" id="pool_title">
+<p3 class="lebels" id="title_lebel">未排入車次</p3>
 </div>
 <table align="center" id="tpool" border="2" cellspacing="0" > </table>
 
-<table align="center" id="emptydata" border="2" cellspacing="0">
+<div class="titles" id="empty_title">
+<p4 class="lebels" id="empty_lebel">車次產生器</p4>
+</div>
+<table align="center" id="emptydata"  cellspacing="0">
 	<tr>
-		<td>
-			車次起點<!--<input type="text" id="empty_O" list="O_range">-->
-				<select id="empty_O">
-					<option> TN
-					<option> CC
-					<option> GS
-					<option> NZ
-					<option> ZI
-					<option> KS
-				</select  >
+		<td style="border-top:#CCCC4D 4px solid;" class="other_td">
+			車次起點
+			<select id="empty_O">
+				<option> TN
+				<option> CC
+				<option> GS
+				<option> NZ
+				<option> ZI
+				<option> KS
+			</select>
 		</td>
-
-		<td>
-			車次終點<!--<input type="text" id="empty_D" list="D_range">-->
-				<select id="empty_D">
-					<option> TN
-					<option> CC
-					<option> GS
-					<option> NZ
-					<option> ZI
-					<option> KS
-				</select>
+		<td style="border-top:#CCCC4D 4px solid; border-right:#CCCC4D 4px solid;" class="other_td">
+			車次終點
+			<select id="empty_D">
+				<option> TN
+				<option> CC
+				<option> GS
+				<option> NZ
+				<option> ZI
+				<option> KS
+			</select>
 		</td>
-
-		<td></td>
+		<td rowspan="2" id="btn_site"><input type="button" value="新增" id="empty_new"></td>
 	</tr>
-
 	<tr>
-		<td>
+		<td style="border-bottom:#CCCC4D 4px solid;" class="other_td">
 			起始時間
-			<!--<input type="text" id="empty_start_hr" list="hr_range">-->
-				<select id="empty_start_hr">
-					
-				</select>
-				:
-				<select id="empty_start_min">
-					
-				</select>
+			<select id="empty_start_hr"></select>
+			:
+			<select id="empty_start_min"></select>
 		</td>
-
-		<td>
+		<td style="border-bottom:#CCCC4D 4px solid; border-right:#CCCC4D 4px solid;" class="other_td">
 			結束時間
-			<!--<input type="text" id="empty_end_hr" list="hr_range">-->
-				<select id="empty_end_hr">
-					
-				</select>
-				:
-				<select id="empty_end_min">
-					
-				</select>
-		</td>
-
-		<td>
-			<input type="button" value="新增" id="empty_new">
+			<select id="empty_end_hr"></select>
+			:
+			<select id="empty_end_min"></select>
 		</td>
 	</tr>
 </table>

@@ -19,28 +19,28 @@
     for(var i=0; i < 24 ; i++)
     {
 	    var new_opt=document.createElement("option");
-	    new_opt.text = i;
+	    new_opt.text = ((i<10)?"0":"") + i;
 	    combobox.add(new_opt);
     }
     var combobox=document.getElementById("empty_start_min");
     for(var i=0; i < 60 ; i++)
     {
 	    var new_opt=document.createElement("option");
-	    new_opt.text = i;
+	    new_opt.text = ((i<10)?"0":"") + i;
 	    combobox.add(new_opt);
     }
     var combobox=document.getElementById("empty_end_hr");
     for(var i=0; i < 24 ; i++)
     {
 	    var new_opt=document.createElement("option");
-	    new_opt.text = i;
+	    new_opt.text = ((i<10)?"0":"") + i;
 	    combobox.add(new_opt);
     }
     var combobox=document.getElementById("empty_end_min");
     for(var i=0; i < 60 ; i++)
     {
 	    var new_opt=document.createElement("option");
-	    new_opt.text = i;
+	    new_opt.text = ((i<10)?"0":"") + i;
 	    combobox.add(new_opt);
     }
 
@@ -263,7 +263,22 @@
 		{
 			var new_cell_start=(cell_start-3)/2;	//json index
 			var new_cell_end=(cell_end-3)/2;	//json index
-			if(new_cell_start==0)
+			if((new_cell_start==0) && (new_cell_end==myList.row[new_row_of_temp].trip.length-1)) //all of the row
+			{
+			    oldCell = {
+				    "start_time": myList.row[new_row_of_temp].trip[new_cell_start].start_time,
+				    "end_time": myList.row[new_row_of_temp].trip[new_cell_end].end_time,
+				    "from_sta": myList.row[new_row_of_temp].trip[new_cell_start].from_sta,
+				    "to_sta": myList.row[new_row_of_temp].trip[new_cell_end].to_sta
+			    };
+
+			    oldCell_pre = {"end_time": 0};
+			    oldCell_pre.to_sta = thisCell.from_sta;
+
+			    oldCell_next = {"start_time": 9999};
+			    oldCell_next.from_sta = thisCell.to_sta;
+			}
+			else if(new_cell_start==0)
 			{
 			    oldCell = {
 				    "start_time": myList.row[new_row_of_temp].trip[new_cell_start].start_time,
@@ -277,7 +292,7 @@
 
 			    oldCell_next = myList.row[new_row_of_temp].trip[new_cell_end+1];
 			}
-			else if (new_cell_end==myList.row[new_row_of_temp].trip.length-1)
+			else if(new_cell_end==myList.row[new_row_of_temp].trip.length-1)
 			{
 			    oldCell = {
 				    "start_time": myList.row[new_row_of_temp].trip[new_cell_start].start_time,
@@ -307,7 +322,15 @@
 		}
 		else
 		{
-			if(new_cell_of_temp==0)
+			if((new_cell_of_temp==0) && (new_cell_of_temp==myList.row[new_row_of_temp].trip.length-1)) //row only 1 obj.
+			{
+			    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
+			    oldCell_pre = {"end_time": 0};
+			    oldCell_pre.to_sta = thisCell.from_sta;
+			    oldCell_next = {"start_time": 9999};
+			    oldCell_next.from_sta = thisCell.to_sta;
+			}
+			else if(new_cell_of_temp==0)
 			{
 			    oldCell = myList.row[new_row_of_temp].trip[new_cell_of_temp];
 			    oldCell_pre = {"end_time": 0};
@@ -337,8 +360,15 @@
 		oldCell_next = {"start_time": 9999};
 		oldCell_next.from_sta = thisCell.to_sta;
 	}
+	if((new_col==0) && (new_col==myList.row[new_row].trip.length-1)) //row only 1 obj.
+	{
+		thisCell_pre = {"end_time": 0};
+		thisCell_pre.to_sta = oldCell.from_sta;
 
-	if(new_col==0)
+		thisCell_next = {"start_time": 9999};
+		thisCell_next.from_sta = oldCell.to_sta;
+	}
+	else if(new_col==0)
 	{
 		//thisCell = myList.row[new_row].trip[new_col];
 		thisCell_pre = {"end_time": 0};
@@ -643,12 +673,17 @@
 	    var ele=document.getElementById("empty_D");
 	    new_trip.to_sta	=ele.options[ele.selectedIndex].text;
 	    //examine
-	    if(new_trip.start_time >= new_trip.end_time || new_trip.from_sta==new_trip.to_sta)
+	    if(new_trip.start_time >= new_trip.end_time)
 	    {
-		    alert("Create failed!");
+		    alert("新增失敗，起訖時間不合");
 		    return;
 	    }
-	    new_trip.line_name	="Dummy";
+	    else if(new_trip.from_sta==new_trip.to_sta)
+	    {
+		    alert("新增失敗，起訖點相同");
+		    return;
+	    }
+	    new_trip.line_name	="空車車次";
 
 	    //add 'new_trip' after 'poolList.trip.length'
 	    poolList.trip.splice( poolList.trip.length, 0, new_trip);
@@ -722,22 +757,45 @@
 		table.rows[i].insertCell(k+1);
 		table.rows[i].cells[k+1].align="center";
 		table.rows[i].cells[k+1].style.padding="5px";
-		if(Trip.line_name == "Dummy")
+		if(Trip.line_name == "空車車次")
 		{
 			table.rows[i].cells[k+1].style.fontStyle="italic";
+			table.rows[i].cells[k+1].style.backgroundColor="#CCCC4D";
 			table.rows[i].cells[k+1].ondblclick = function(){
 				var dblc=confirm("是否要刪除？");
 				if(dblc)
 				{
 					var row  = this.parentNode.rowIndex-1;	//json index
 					var cell = (this.cellIndex - 3)/2;	//json index
-					//delete obj (delete 1 obj from cell)
-					myList.row[row].trip.splice(cell,1);
+					if((myList.row[row].trip.length==1) || ((cell==myList.row[row].trip.length-1) || (cell==0)))
+					//row中只有一個或空車在邊上
+					{
+						//delete obj (delete 1 obj from cell)
+						myList.row[row].trip.splice(cell,1);
 
-					//refresh table
-					for(var q=table.rows.length-1;q>=0;q--)
-						table.deleteRow(q);
-					display_table();
+						//refresh table
+						for(var q=table.rows.length-1;q>=0;q--)
+							table.deleteRow(q);
+						display_table();
+					}
+					else
+					{
+						var precell =myList.row[row].trip[cell-1];
+						var nextcell=myList.row[row].trip[cell+1];
+						if(precell.to_sta==nextcell.from_sta)
+						{
+							//delete obj (delete 1 obj from cell)
+							myList.row[row].trip.splice(cell,1);
+
+							//refresh table
+							for(var q=table.rows.length-1;q>=0;q--)
+								table.deleteRow(q);
+							display_table();
+						}
+						else
+							alert("刪除失敗，起訖點無法接續");
+					}
+					
 				}
 			}
 		}
@@ -909,18 +967,24 @@
 					event.dataTransfer.setData("Text", event.target.id);
 				};
 				table.rows[i].cells[j].onclick =function(){
-					if(isalldrag)	//'alldrag' is start
+					if(isalldrag && (row_read_tb==this.parentNode.rowIndex))	//'alldrag' is start
+					{								//and in the same row
+						cell_start = (cell_read_tb<=this.cellIndex)? cell_read_tb : this.cellIndex ;	//table index
+						cell_end = (cell_read_tb<=this.cellIndex)? this.cellIndex : cell_read_tb ;	//table index
+						//change these cells color
+						for(var l=cell_start; l <= cell_end; l+=2)
+							table.rows[row_read_tb].cells[l].style.backgroundColor = "#FDB03B";
+					}
+					else if(isalldrag)
 					{
-						if(row_read_tb==this.parentNode.rowIndex)	//in the same row
-						{
-							cell_start = (cell_read_tb<=this.cellIndex)? cell_read_tb : this.cellIndex ;	//table index
-							cell_end = (cell_read_tb<=this.cellIndex)? this.cellIndex : cell_read_tb ;	//table index
-							//change these cells color
-							for(var l=cell_start; l <= cell_end; l+=2)
-								table.rows[row_read_tb].cells[l].style.backgroundColor = "#FDB03B";
-						}
-						else
-							isalldrag = false;
+						isalldrag = false;
+						//refresh table
+						for(var q=table.rows.length-1;q>=0;q--)
+							table.deleteRow(q);
+						display_table();
+						//isread reset
+						isread_tb   = false;
+						isread_pool = false;
 					}
 					else
 					{
@@ -1069,13 +1133,13 @@
 								else
 									alert("交換失敗，班次無法銜接");	
 							}
+							table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = color_of_under;
 						}
 					}
 					if(table_mark==0)
 						table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
 					else if(table_mark==1)
 						pool.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
-					//table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = color_of_under;
 					/*//refresh table
 					for(var q=table.rows.length-1;q>=0;q--)
 						table.deleteRow(q);
@@ -1110,7 +1174,7 @@
 		if(Trip)
 		{
 			pool.rows[i].cells[j].align="center";
-			if(Trip.line_name == "Dummy")
+			if(Trip.line_name == "空車車次")
 			{
 				pool.rows[i].cells[j].style.fontStyle="italic";
 				pool.rows[i].cells[j].ondblclick = function(){
@@ -1168,6 +1232,14 @@
 				display_pool();
 			};
 			pool.rows[i].cells[j].onclick =function(){
+				if(isalldrag)
+				{
+					isalldrag = false;
+					//refresh pool
+					for(var q=pool.rows.length-1;q>=0;q--)
+						pool.deleteRow(q);
+					display_pool();
+				}
 				//read data color change
 				var row_pool  = this.parentNode.rowIndex;
 				var cell_pool = this.cellIndex;
@@ -1252,6 +1324,7 @@
 		event.preventDefault();
 		//old 'overed'
 		table.rows[row_of_under].cells[cell_of_under].style.backgroundColor = color_of_under;
+		//new 'overed'
 		row_of_under	= -1;	//-: isinpool
 		cell_of_under	= this.cellIndex;		//lastrow & lastcell
 		color_of_under	= this.style.backgroundColor;
@@ -1259,11 +1332,36 @@
 	};
 	pool.rows[lastrows_pool].cells[lastcell_pool].ondrop =function(event){
 		event.preventDefault();
-		insert(this.parentNode.rowIndex, this.cellIndex ,1);
+			
+		//insert(this.parentNode.rowIndex, this.cellIndex ,1);
 		if(table_mark==0)
+		{
+			var row  = row_of_temp-1;		//json index
+			var cell = (cell_of_temp - 3)/2;	//json index
+			if((myList.row[row].trip.length==1) || ((cell==myList.row[row].trip.length-1) || (cell==0)))
+			//被移動之row中只有一個或此車次在邊上
+			{
+				insert(this.parentNode.rowIndex, this.cellIndex ,1);
+			}
+			else
+			//被移動之車次不在row的邊上
+			{
+				var precell =myList.row[row].trip[cell-1];
+				var nextcell=myList.row[row].trip[cell+1];
+				if(precell.to_sta==nextcell.from_sta)
+				{
+					insert(this.parentNode.rowIndex, this.cellIndex ,1);
+				}
+				else
+					alert("刪除失敗，起訖點無法接續");
+			}
 			table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
+		}
 		else if(table_mark==1)
+		{
+			insert(this.parentNode.rowIndex, this.cellIndex ,1);
 			pool.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
+		}
 		table.rows[this.parentNode.rowIndex].cells[this.cellIndex].style.backgroundColor = color_of_under;
 		/*//refresh table
 		for(var q=table.rows.length-1;q>=0;q--)
