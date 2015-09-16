@@ -1336,26 +1336,53 @@
 		//insert(this.parentNode.rowIndex, this.cellIndex ,1);
 		if(table_mark==0)
 		{
-			var row  = row_of_temp-1;		//json index
-			var cell = (cell_of_temp - 3)/2;	//json index
-			if((myList.row[row].trip.length==1) || ((cell==myList.row[row].trip.length-1) || (cell==0)))
-			//被移動之row中只有一個或此車次在邊上
+			if(isalldrag)
 			{
-				insert(this.parentNode.rowIndex, this.cellIndex ,1);
-			}
-			else
-			//被移動之車次不在row的邊上
-			{
-				var precell =myList.row[row].trip[cell-1];
-				var nextcell=myList.row[row].trip[cell+1];
-				if(precell.to_sta==nextcell.from_sta)
+				var row  = row_of_temp-1;		//json index
+				var new_cell_start=(cell_start-3)/2;	//json index
+				var new_cell_end=(cell_end-3)/2;	//json index
+				if((myList.row[row].trip.length==1) || ((new_cell_end==myList.row[row].trip.length-1) || (new_cell_start==0)))
+				//被移動之row中只有一個或這些車次有靠邊
 				{
 					insert(this.parentNode.rowIndex, this.cellIndex ,1);
 				}
 				else
-					alert("刪除失敗，起訖點無法接續");
+				//被移動之這些車次沒有靠邊
+				{
+					var precell =myList.row[row].trip[new_cell_start-1];
+					var nextcell=myList.row[row].trip[new_cell_end+1];
+					if(precell.to_sta==nextcell.from_sta)
+					{
+						insert(this.parentNode.rowIndex, this.cellIndex ,1);
+					}
+					else
+						alert("刪除失敗，起訖點無法接續");
+				}
 			}
-			table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
+			else
+			{
+				var row  = row_of_temp-1;		//json index
+				var cell = (cell_of_temp - 3)/2;	//json index
+				if((myList.row[row].trip.length==1) || ((cell==myList.row[row].trip.length-1) || (cell==0)))
+				//被移動之row中只有一個或此車次在邊上
+				{
+					insert(this.parentNode.rowIndex, this.cellIndex ,1);
+				}
+				else
+				//被移動之車次不在row的邊上
+				{
+					var precell =myList.row[row].trip[cell-1];
+					var nextcell=myList.row[row].trip[cell+1];
+					if(precell.to_sta==nextcell.from_sta)
+					{
+						insert(this.parentNode.rowIndex, this.cellIndex ,1);
+					}
+					else
+						alert("刪除失敗，起訖點無法接續");
+				}
+				table.rows[row_of_temp].cells[cell_of_temp].style.backgroundColor = color_of_temp;
+			}
+			
 		}
 		else if(table_mark==1)
 		{
